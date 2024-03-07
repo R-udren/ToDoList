@@ -10,6 +10,7 @@ class Priority:
     }
 
     def __init__(self, level):
+        level = level.capitalize()
         if level not in self.LEVELS:
             raise ValueError("Invalid priority level")
         self.level = self.LEVELS[level]
