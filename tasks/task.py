@@ -8,3 +8,5 @@ class Task:
         self.complete = status
         self.due_date = due_date
         self.priority = priority
+        self.create_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
