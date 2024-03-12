@@ -3,12 +3,12 @@ Task management app written on Python ~~using FastAPI and MySQL~~.
 
 ## Features
 
-- [] Create a task
-- [] Update (Edit) a task
-- [] Delete a task
-- [] List all tasks
-- [] Sort tasks by parameters
-- [] Mark a task as done
+- [ ] Create a task
+- [ ] Update (Edit) a task
+- [ ] Delete a task
+- [ ] List all tasks
+- [ ] Sort tasks by parameters
+- [ ] Mark a task as done
 
 ## Installation
 
