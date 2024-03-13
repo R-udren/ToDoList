@@ -3,6 +3,7 @@ from rich.console import Console
 from rich.table import Table
 
 from tasks.task_manager import TaskManager
+from tasks.task import Task
 
 
 console = Console()
@@ -24,6 +25,14 @@ def options_menu():
 
     task_manager = TaskManager()
     task_manager.command(option)
+
+
+def create_task():
+    description = Prompt.ask("Description")
+    due_date = Prompt.ask("Due date")
+    priority = Prompt.ask("Priority")
+    task = Task(description, due_date, priority)
+    return task
 
 
 

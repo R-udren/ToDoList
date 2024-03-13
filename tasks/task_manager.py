@@ -2,6 +2,8 @@ from tasks.task import Task
 from tasks.database_manager import DatabaseManager
 from config import DB_NAME
 
+import ui
+
 class TaskManager:
     commands = [
         "Create a task",
@@ -20,7 +22,7 @@ class TaskManager:
     def command(self, option: int):
         match option:
             case 1:
-                task = Task()
+                task = ui.create_task()
                 self.create_task(task)
             case 2:
                 self.update_task()
@@ -32,7 +34,7 @@ class TaskManager:
                 self.exit()
 
     def create_task(self, task: Task):
-        pass
+        self.tasks.append(task)
 
     def update_task(self, old_task: Task, new_task: Task):
         pass
