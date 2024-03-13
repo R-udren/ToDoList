@@ -1,5 +1,6 @@
 from datetime import datetime
 from tasks.priority import Priority
+from config import TIME_FORMAT
 
 
 class Task:
@@ -8,5 +9,5 @@ class Task:
         self.complete = status
         self.due_date = due_date
         self.priority = priority
-        self.create_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.create_date = datetime.now().strftime(TIME_FORMAT)
 
