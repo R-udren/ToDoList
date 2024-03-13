@@ -4,6 +4,8 @@ from config import DB_NAME
 
 import ui
 
+from rich.prompt import Prompt
+
 class TaskManager:
     commands = [
         "Create a task",
@@ -25,7 +27,7 @@ class TaskManager:
                 task = ui.create_task()
                 self.create_task(task)
             case 2:
-                self.update_task()
+                self.update_task(ui.create_task(), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
             case 3:
                 self.delete_task()
             case 4:
@@ -37,8 +39,11 @@ class TaskManager:
     def create_task(self, task: Task):
         self.tasks.append(task)
 
-    def update_task(self, old_task: Task, new_task: Task):
-        pass
+    def update_task(self, new_task: Task, old_task: Task):
+        for (i, task) in enumerate(self.tasks):
+            if task == old_task:
+                self.tasks[i] = new_task
+                break
 
     def delete_task(self, task_to_delete: Task):
         pass
