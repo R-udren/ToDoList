@@ -1,5 +1,5 @@
 from tasks.task import Task
-from database_manager import DatabaseManager
+from tasks.database_manager import DatabaseManager
 from config import DB_NAME
 
 class TaskManager:
@@ -27,7 +27,7 @@ class TaskManager:
             case 3:
                 self.delete_task()
             case 4:
-                self.list_tasks()
+                self.list_tasks(self.tasks)
             case 5:
                 self.exit()
 
