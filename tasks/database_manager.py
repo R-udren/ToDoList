@@ -20,5 +20,9 @@ class DatabaseManager:
         self.cursor.execute(f'SELECT * FROM {table_name} WHERE {column_name} = ?', (value,))
         return self.cursor.fetchall()
 
+    def read_records(self, table_name: str):
+        self.cursor.execute(f'SELECT * FROM {table_name}')
+        return self.cursor.fetchall()
+
     def close(self):
         self.db.close()
