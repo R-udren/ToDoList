@@ -29,7 +29,8 @@ class TaskManager:
             case 3:
                 self.delete_task()
             case 4:
-                self.list_tasks(self.tasks)
+                sort_by, filter_by = ui.list_options()
+                self.list_tasks(self.tasks, sort_by=sort_by, filter_by=filter_by)
             case 5:
                 self.exit()
 
@@ -43,7 +44,7 @@ class TaskManager:
         pass
 
     def list_tasks(self, tasks: list[Task], sort_by=None, filter_by=None):
-        return tasks
+        return Task.compare(tasks, sort_by, filter_by) if sort_by or filter_by else tasks
 
     def save_to_db(self, tasks: list[Task]):
         pass

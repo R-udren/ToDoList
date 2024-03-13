@@ -35,6 +35,16 @@ def create_task():
     return task
 
 
+def list_options():
+    sort_by = Prompt.ask("Sort by", choices=["due_date", "create_date", "priority"])
+    filter_by = {
+        "complete": Prompt.ask("Complete", choices=["True", "False"]),
+        "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"]),
+        "due_date": Prompt.ask("Due date"),
+        "create_date": Prompt.ask("Create date")
+    }
+    return sort_by, filter_by
+
 
 def menu():
     while True:
