@@ -1,6 +1,6 @@
 import sqlite3
 
-class DataBaseManager:
+class DatabaseManager:
     def __init__(self, db_name: str):
         self.db_name = db_name
         self.db = sqlite3.connect(db_name)
