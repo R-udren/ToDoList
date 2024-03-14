@@ -25,7 +25,6 @@ class TaskManager:
     def command(self, option: int):
         match option:
             case 1:
-                task = ui.create_task()
                 self.create_task(ui.create_task())
             case 2:
                 self.update_task(ui.create_task(), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
@@ -38,19 +37,20 @@ class TaskManager:
                 self.exit()
 
     def create_task(self, task: Task):
-        self.tasks.append(task)
-        self.save_to_db()
+        self.db.add_record('tasks', [task.description, task.complete, task.due_date, task.priority, task.create_date])
 
     def update_task(self, new_task: Task, old_task: Task):
         for (i, task) in enumerate(self.tasks):
             if task == old_task:
                 self.tasks[i] = new_task
+                self.db.clear_table('tasks')
                 self.save_to_db()
                 break
         
 
     def delete_task(self, task_to_delete: Task):
         self.tasks.remove(task_to_delete)
+        self.db.clear_table('tasks')
         self.save_to_db()
 
     def list_tasks(self, tasks: list[Task], sort_by=None, filter_by=None):
