@@ -37,6 +37,7 @@ class TaskManager:
                 self.exit()
 
     def create_task(self, task: Task):
+        self.tasks.append(task)
         self.db.add_record('tasks', [task.description, task.complete, task.due_date, task.priority, task.create_date])
 
     def update_task(self, new_task: Task, old_task: Task):
