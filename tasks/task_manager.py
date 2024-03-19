@@ -15,11 +15,12 @@ class TaskManager:
         "Exit"
     ]
 
-    def __init__(self):
+    def __init__(self, user_id : str):
         self.db = DatabaseManager(DB_NAME)
-        self.db.create_table("tasks", ["description TEXT", "complete INTEGER", "due_date TEXT", "priority INTEGER", "create_date TEXT"])
-        self.records = self.db.read_records("tasks")
+        self.db.create_task_table("tasks", ["description TEXT", "complete INTEGER", "due_date TEXT", "priority INTEGER", "create_date TEXT"])
+        self.records = self.db.read_records("tasks", user_id)
         self.tasks = [Task(*record) for record in self.records]
+        self.user_id = user_id
 
 
     def command(self, option: int):
@@ -40,20 +41,20 @@ class TaskManager:
 
     def create_task(self, task: Task):
         self.tasks.append(task)
-        self.db.add_record('tasks', [task.description, task.complete, task.due_date, task.priority, task.create_date])
+        self.db.add_record('tasks', [self.user_id, task.description, task.complete, task.due_date, task.priority, task.create_date])
 
     def update_task(self, new_task: Task, old_task: Task):
         for (i, task) in enumerate(self.tasks):
             if task == old_task:
                 self.tasks[i] = new_task
-                self.db.clear_table('tasks')
+                self.db.clear_table('tasks', self.user_id)
                 self.save_to_db()
                 break
         
 
     def delete_task(self, task_to_delete: Task):
         self.tasks.remove(task_to_delete)
-        self.db.clear_table('tasks')
+        self.db.clear_table('tasks', self.user_id)
         self.save_to_db()
 
     def list_tasks(self, tasks: list[Task], sort_by=None, filter_by=None):
@@ -61,7 +62,7 @@ class TaskManager:
 
     def save_to_db(self):
         for task in self.tasks:
-            self.db.add_record('tasks', [task.description, task.complete, task.due_date, task.priority, task.create_date])
+            self.db.add_record('tasks', [self.user_id, task.creator_id, task.description, task.complete, task.due_date, task.priority, task.create_date])
         
 
     @staticmethod

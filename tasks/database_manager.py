@@ -13,7 +13,9 @@ class DatabaseManager:
         self.db = sqlite3.connect(db_name)
         self.cursor = self.db.cursor()
 
-    def create_table(self, table_name: str, columns: list):
+    def create_task_table(self, table_name: str, columns: list):
+        columns.insert(0, 'user_id TEXT')
+        columns.append('FOREIGN KEY(user_id) REFERENCES users(id)')
         columns = ', '.join(columns)
         self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns})')
         self.db.commit()
@@ -28,13 +30,15 @@ class DatabaseManager:
         self.cursor.execute(f'SELECT * FROM {table_name} WHERE {column_name} = ?', (value,))
         return self.cursor.fetchall()
 
-    def read_records(self, table_name: str):
-        self.cursor.execute(f'SELECT * FROM {table_name}')
+    def read_records(self, table_name: str, user_id : str):
+        self.cursor.execute(f'SELECT * FROM {table_name} WHERE user_id = ?', (user_id,))
         return self.cursor.fetchall()
 
-    def clear_table(self, table_name: str):
-        self.cursor.execute(f'DELETE FROM {table_name}')
+    def clear_table(self, table_name: str, user_id : str):
+        self.cursor.execute(f'DELETE FROM {table_name} WHERE user_id = ?', (user_id,))
         self.db.commit()
+
+    ## TODO: Add create_user_table function
 
     def close(self):
         self.db.close()

@@ -7,8 +7,9 @@ from config import TIME_FORMAT
 
 
 class Task:
-    def __init__(self, description: str, complete: bool = False,
+    def __init__(self, user_id : str, description: str, complete: bool = False,
                  due_date: str = None, priority: Priority = Priority("Low"), create_date: str = None):
+        self.creator_id = user_id
         self.description = description
         self.complete = complete
         self.due_date = due_date

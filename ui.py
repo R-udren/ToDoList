@@ -31,11 +31,11 @@ def options_menu():
     task_manager.command(option)
 
 
-def create_task():
+def create_task(user_id : str):
     description = Prompt.ask("Description")
     due_date = Prompt.ask(f"Due date", default=datetime.now().strftime(TIME_FORMAT))
     priority = Priority(Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low"))
-    task = Task(description=description, due_date=due_date, priority=priority)
+    task = Task(user_id=user_id, description=description, due_date=due_date, priority=priority)
     return task
 
 
