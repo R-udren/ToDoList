@@ -9,11 +9,16 @@ class Priority:
         "High": HIGH,
     }
 
-    def __init__(self, level):
-        level = level.capitalize()
-        if level not in self.LEVELS:
-            raise ValueError("Invalid priority level")
-        self.level = self.LEVELS[level]
+    def __init__(self, level: str | int):
+        if isinstance(level, str):
+            self.level = self.LEVELS[level.capitalize()]
+        elif isinstance(level, int):
+            self.level = level
+        else:
+            raise ValueError("Priority level must be a string or an integer")
+
+    def level(self):
+        return self.level
 
     def __str__(self):
         return list(self.LEVELS.keys())[list(self.LEVELS.values()).index(self.level)]

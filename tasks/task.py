@@ -7,12 +7,13 @@ from config import TIME_FORMAT
 
 
 class Task:
-    def __init__(self, description: str, status: bool = False, due_date: str = None, priority: Priority = Priority("Low")):
+    def __init__(self, description: str, complete: bool = False,
+                 due_date: str = None, priority: Priority = Priority("Low"), create_date: str = None):
         self.description = description
-        self.complete = status
+        self.complete = complete
         self.due_date = due_date
-        self.priority = priority
-        self.create_date = datetime.now().strftime(TIME_FORMAT)
+        self.priority = Priority(priority).level
+        self.create_date = create_date if create_date is not None else datetime.now().strftime(TIME_FORMAT)
 
     @staticmethod
     def compare(tasks: list, sort_by: str, filter_by: dict, reverse: bool = False):

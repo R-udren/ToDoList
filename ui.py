@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from rich.prompt import Prompt
 from rich.console import Console
 from rich.table import Table
 
 from tasks.task_manager import TaskManager
+from tasks.priority import Priority
 from tasks.task import Task
+from config import TIME_FORMAT
 
 
 console = Console()
@@ -29,9 +33,9 @@ def options_menu():
 
 def create_task():
     description = Prompt.ask("Description")
-    due_date = Prompt.ask("Due date")
-    priority = Prompt.ask("Priority")
-    task = Task(description, due_date, priority)
+    due_date = Prompt.ask(f"Due date", default=datetime.now().strftime(TIME_FORMAT))
+    priority = Priority(Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low"))
+    task = Task(description=description, due_date=due_date, priority=priority)
     return task
 
 
@@ -40,7 +44,7 @@ def list_options():
     filter_by = {
         "complete": Prompt.ask("Complete", choices=["True", "False"]),
         "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"]),
-        "due_date": Prompt.ask("Due date"),
+        "due_date": Prompt.ask(f"Due date ({TIME_FORMAT})"),
         "create_date": Prompt.ask("Create date")
     }
     return sort_by, filter_by

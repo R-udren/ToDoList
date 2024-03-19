@@ -17,7 +17,7 @@ class TaskManager:
 
     def __init__(self):
         self.db = DatabaseManager(DB_NAME)
-        self.db.create_table("tasks", ["description TEXT", "complete INTEGER", "due_date TEXT", "priority TEXT", "create_date TEXT"])
+        self.db.create_table("tasks", ["description TEXT", "complete INTEGER", "due_date TEXT", "priority INTEGER", "create_date TEXT"])
         self.records = self.db.read_records("tasks")
         self.tasks = [Task(*record) for record in self.records]
 
@@ -31,6 +31,8 @@ class TaskManager:
             case 3:
                 self.delete_task(self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
             case 4:
+                if self.records == []:
+                    raise Exception("No tasks to list")
                 sort_by, filter_by = ui.list_options()
                 self.list_tasks(self.tasks, sort_by=sort_by, filter_by=filter_by)
             case 5:
