@@ -2,7 +2,9 @@ from tasks.task import Task
 from tasks.database_manager import DatabaseManager
 from config import DB_NAME
 
-import ui
+from config import TIME_FORMAT
+from datetime import datetime
+from tasks.priority import Priority
 
 from rich.prompt import Prompt
 
@@ -23,18 +25,18 @@ class TaskManager:
         self.user_id = user_id
 
 
-    def command(self, option: int):
+    def task_command(self, option: int):
         match option:
             case 1:
-                self.create_task(ui.create_task())
+                self.create_task(TaskManager.input_task())
             case 2:
-                self.update_task(ui.create_task(), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
+                self.update_task(TaskManager.input_task(), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
             case 3:
                 self.delete_task(self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
             case 4:
                 if self.records == []:
                     raise Exception("No tasks to list")
-                sort_by, filter_by = ui.list_options()
+                sort_by, filter_by = TaskManager.list_options()
                 self.list_tasks(self.tasks, sort_by=sort_by, filter_by=filter_by)
             case 5:
                 self.exit()
@@ -63,7 +65,23 @@ class TaskManager:
     def save_to_db(self):
         for task in self.tasks:
             self.db.add_record('tasks', [self.user_id, task.creator_id, task.description, task.complete, task.due_date, task.priority, task.create_date])
-        
+    
+    def list_options():
+        sort_by = Prompt.ask("Sort by", choices={"due date" : "due_date", "create date" : "create_date", "priority" : "priority"})
+        filter_by = {
+            "complete": Prompt.ask("Complete", choices=["True", "False"]),
+            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"]),
+            "due_date": Prompt.ask(f"Due date ({TIME_FORMAT})"),
+            "create_date": Prompt.ask("Create date")
+        }
+        return sort_by, filter_by
+    
+    def input_task(user_id : str):
+        description = Prompt.ask("Description")
+        due_date = Prompt.ask(f"Due date", default=datetime.now().strftime(TIME_FORMAT))
+        priority = Priority(Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low"))
+        task = Task(user_id=user_id, description=description, due_date=due_date, priority=priority)
+        return task
 
     @staticmethod
     def exit():
