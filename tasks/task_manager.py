@@ -1,5 +1,6 @@
 from tasks.task import Task
-from tasks.database_manager import DatabaseManager
+from database_manager import DatabaseManager
+from users.user import User
 from config import DB_NAME
 
 from config import TIME_FORMAT
@@ -28,9 +29,9 @@ class TaskManager:
     def task_command(self, option: int):
         match option:
             case 1:
-                self.create_task(TaskManager.input_task())
+                self.create_task(TaskManager.input_task(self.user_id))
             case 2:
-                self.update_task(TaskManager.input_task(), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
+                self.update_task(TaskManager.input_task(self.user_id), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
             case 3:
                 self.delete_task(self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
             case 4:
@@ -80,8 +81,8 @@ class TaskManager:
         description = Prompt.ask("Description")
         due_date = Prompt.ask(f"Due date", default=datetime.now().strftime(TIME_FORMAT))
         priority = Priority(Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low"))
-        task = Task(user_id=user_id, description=description, due_date=due_date, priority=priority)
-        return task
+        return Task(user_id=user_id, description=description, due_date=due_date, priority=priority)
+
 
     @staticmethod
     def exit():

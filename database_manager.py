@@ -31,6 +31,9 @@ class DatabaseManager:
         self.cursor.execute(f'DELETE FROM {table_name} WHERE user_id = ?', (user_id,))
         self.db.commit()
 
+    def delete_table(self, table_name: str):
+        self.cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
+        self.db.commit()
 
     ## User table functions
         
@@ -48,8 +51,8 @@ class DatabaseManager:
         self.cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         return self.cursor.fetchone() is not None
     
-    def add_user(self, table_name: str, user_id, username, email, hashed_password):
-        self.cursor.execute(f'INSERT INTO {table_name} VALUES (?, ?, ?, ?)', (user_id, username, email, hashed_password))
+    def add_user(self, table_name: str, id, username, email, password):
+        self.cursor.execute(f'INSERT INTO {table_name} VALUES (?, ?, ?, ?)', (id, username, email, password))
         self.db.commit()
 
     def close(self):
