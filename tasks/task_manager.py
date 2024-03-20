@@ -1,6 +1,5 @@
 from tasks.task import Task
 from database_manager import DatabaseManager
-from users.user import User
 from config import DB_NAME
 
 from config import TIME_FORMAT
@@ -31,9 +30,9 @@ class TaskManager:
             case 1:
                 self.create_task(TaskManager.input_task(self.user_id))
             case 2:
-                self.update_task(TaskManager.input_task(self.user_id), self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
+                self.update_task(TaskManager.input_task(self.user_id), self.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(self.tasks) + 1)])) - 1])
             case 3:
-                self.delete_task(self.tasks[Prompt.ask("Select an option", choices=[int(i) for i in range(1, len(self.tasks) + 1)]) - 1])
+                self.delete_task(self.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(self.tasks) + 1)])) - 1])
             case 4:
                 if self.records == []:
                     raise Exception("No tasks to list")
@@ -65,7 +64,7 @@ class TaskManager:
 
     def save_to_db(self):
         for task in self.tasks:
-            self.db.add_record('tasks', [self.user_id, task.creator_id, task.description, task.complete, task.due_date, task.priority, task.create_date])
+            self.db.add_record('tasks', [self.user_id, task.description, task.complete, task.due_date, task.priority, task.create_date])
     
     def list_options():
         sort_by = Prompt.ask("Sort by", choices={"due date" : "due_date", "create date" : "create_date", "priority" : "priority"})
@@ -80,7 +79,8 @@ class TaskManager:
     def input_task(user_id : str):
         description = Prompt.ask("Description")
         due_date = Prompt.ask(f"Due date", default=datetime.now().strftime(TIME_FORMAT))
-        priority = Priority(Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low"))
+        priority_name = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low")
+        priority = Priority(priority_name)
         return Task(user_id=user_id, description=description, due_date=due_date, priority=priority)
 
 

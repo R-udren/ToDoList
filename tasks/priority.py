@@ -11,11 +11,14 @@ class Priority:
 
     def __init__(self, level: str | int):
         if isinstance(level, str):
-            self.level = self.LEVELS[level.capitalize()]
+            level = level.capitalize()
+            if level in self.LEVELS:
+                self.level = self.LEVELS[level]
+            else:
+                raise ValueError("Invalid priority level")
         elif isinstance(level, int):
             self.level = level
         else:
-            ## FIXME: This shouldn't raise if the input is a string like 'Medium'
             raise ValueError("Priority level must be a string or an integer")
 
     def level(self):

@@ -1,5 +1,6 @@
 from datetime import datetime
 from operator import attrgetter
+from typing import Union
 
 
 from tasks.priority import Priority
@@ -8,12 +9,14 @@ from config import TIME_FORMAT
 
 class Task:
     def __init__(self, user_id : str, description: str, complete: bool = False,
-                 due_date: str = None, priority: Priority = Priority("Low"), create_date: str = None):
+                 due_date: str = None, priority: Union[Priority, int] = Priority("Low"), create_date: str = None):
         self.creator_id = user_id
         self.description = description
         self.complete = complete
         self.due_date = due_date
-        self.priority = Priority(priority).level
+        if isinstance(priority, int):
+            priority = Priority(priority)
+        self.priority = priority.level
         self.create_date = create_date if create_date is not None else datetime.now().strftime(TIME_FORMAT)
 
     @staticmethod

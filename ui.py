@@ -21,11 +21,10 @@ def create_options_table(commands : list[str]):
 
 def options_menu(user_id : str):
     console.print(create_options_table(TaskManager.commands))
-    option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
-
     task_manager = TaskManager(user_id)
     while True:
         try:
+            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
             task_manager.task_command(option)
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Logging out![/bold yellow]")
