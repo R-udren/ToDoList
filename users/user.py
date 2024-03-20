@@ -5,12 +5,14 @@ import hashlib
 import os
 import binascii
 
+
+
 class User:
     def __init__(self, user_id, username, email, password):
         self.user_id = user_id
-        self.username = self.validate_username(username)
-        self.email = self.validate_email(email)
-        self.password = self.validate_password(password)
+        self.username = username
+        self.email = email
+        self.password = password
 
     @staticmethod
     def generate_user_id():

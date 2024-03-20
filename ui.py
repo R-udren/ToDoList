@@ -40,8 +40,6 @@ def login_menu():
     if choice is not None:
         if option == 1:
             options_menu(choice)
-
-    print(f'option: {option}, choice: {choice}')
         
 def menu():
     while True:
