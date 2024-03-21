@@ -23,7 +23,17 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
         table.add_column("Create Date", style="magenta")
 
         for i, option in enumerate(commands, 1):
-            table.add_row(str(i), option.description, str(option.complete), str(option.due_date), str(option.priority), str(option.create_date))
+            if option.complete:
+                complete = "True"
+            else:
+                complete = "False"
+            if option.priority == 1:
+                option.priority = "Low"
+            elif option.priority == 2:
+                option.priority = "Medium"
+            elif option.priority == 3:
+                option.priority = "High"
+            table.add_row(str(i), option.description, complete, str(option.due_date), option.priority, str(option.create_date))
         return table
     elif isinstance(commands[0], User):
         table.add_column("Username", style="magenta")

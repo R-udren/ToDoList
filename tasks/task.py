@@ -16,7 +16,7 @@ class Task:
         self.due_date = due_date
         if isinstance(priority, int):
             priority = Priority(priority)
-        self.priority = priority.level
+        self.priority = priority
         self.create_date = create_date if create_date is not None else datetime.now().strftime(TIME_FORMAT)
 
     @staticmethod
