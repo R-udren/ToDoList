@@ -34,10 +34,11 @@ class TaskManager:
             case 3:
                 self.delete_task(self.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(self.tasks) + 1)])) - 1])
             case 4:
-                if self.records == []:
+                if self.tasks == []:
                     raise Exception("No tasks to list")
-                sort_by, filter_by = TaskManager.list_options()
-                self.list_tasks(self.tasks, sort_by=sort_by, filter_by=filter_by)
+                return self.tasks
+                # sort_by, filter_by = TaskManager.list_options()
+                # self.list_tasks(self.tasks, sort_by=sort_by, filter_by=filter_by)
             case 5:
                 self.exit()
 
