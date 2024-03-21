@@ -7,8 +7,7 @@ class DatabaseManager:
         self.cursor = self.db.cursor()
 
     def create_task_table(self, table_name: str, columns: list):
-        columns.insert(0, 'user_id TEXT')
-        columns.append('FOREIGN KEY(user_id) REFERENCES users(id)')
+        columns.append('FOREIGN KEY(email) REFERENCES users(email)')
         columns = ', '.join(columns)
         self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns})')
         self.db.commit()
@@ -23,12 +22,12 @@ class DatabaseManager:
         self.cursor.execute(f'SELECT * FROM {table_name} WHERE {column_name} = ?', (value,))
         return self.cursor.fetchall()
 
-    def read_records(self, table_name: str, user_id : str):
-        self.cursor.execute(f'SELECT * FROM {table_name} WHERE user_id = ?', (user_id,))
+    def read_records(self, table_name: str, email : str):
+        self.cursor.execute(f'SELECT * FROM {table_name} WHERE email = ?', (email,))
         return self.cursor.fetchall()
 
-    def clear_table(self, table_name: str, user_id : str):
-        self.cursor.execute(f'DELETE FROM {table_name} WHERE user_id = ?', (user_id,))
+    def clear_table(self, table_name: str, email : str):
+        self.cursor.execute(f'DELETE FROM {table_name} WHERE email = ?', (email,))
         self.db.commit()
 
     def delete_table(self, table_name: str):
@@ -38,7 +37,6 @@ class DatabaseManager:
     ## User table functions
         
     def create_user_table(self, table_name: str, columns: list):
-        columns.insert(0, 'id TEXT PRIMARY KEY')
         columns = ', '.join(columns)
         self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns})')
         self.db.commit()
@@ -50,9 +48,9 @@ class DatabaseManager:
     def email_exists(self, email):
         self.cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         return self.cursor.fetchone() is not None
-    
-    def add_user(self, table_name: str, id, username, email, password):
-        self.cursor.execute(f'INSERT INTO {table_name} VALUES (?, ?, ?, ?)', (id, username, email, password))
+
+    def add_user(self, table_name: str, username, email, password):
+        self.cursor.execute(f'INSERT INTO {table_name} VALUES (?, ?, ?)', (username, email, password))
         self.db.commit()
 
     def close(self):

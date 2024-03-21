@@ -8,15 +8,10 @@ import binascii
 
 
 class User:
-    def __init__(self, user_id, username, email, password):
-        self.user_id = user_id
+    def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = password
-
-    @staticmethod
-    def generate_user_id():
-        return str(uuid.uuid4())
 
     @staticmethod
     def validate_username(username, db):
@@ -46,7 +41,7 @@ class User:
         
         """Hash a password for storing."""
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
-        pwdhash = hashlib.pbkdf2_hmac('sha512', User.validate_password(password).encode('utf-8'), 
+        pwdhash = hashlib.pbkdf2_hmac('sha512', User.validate_password(password).encode('utf-8'),
                                     salt, 100000)
         pwdhash = binascii.hexlify(pwdhash)
         return (salt + pwdhash).decode('ascii')

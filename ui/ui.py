@@ -26,20 +26,30 @@ def options_menu(user_id : str):
         try:
             option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
             task_manager.task_command(option)
+        except Exception as e:
+            console.print(f"[bold red]{e}[/bold red]")
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Logging out![/bold yellow]")
             break
 
 def login_menu():
     console.print(create_options_table(UserManager.options))
-    option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
-
     user_manager = UserManager()
-    choice = user_manager.user_command(option)
-    if choice is not None:
-        if option == 1:
-            options_menu(choice)
-        
+
+    option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
+    try:
+        match option:
+            case 1:
+                options_menu(user_manager.login(Prompt.ask("Email"), Prompt.ask("Password", password=True)))
+            case 2:
+                options_menu(user_manager.save_user(Prompt.ask("Username"), Prompt.ask("Email"), Prompt.ask("Password", password=True)))
+            case 3:
+                user_manager.exit()
+    except ValueError as ve:
+        console.print(f"[bold red]{ve}[/bold red]")
+    except Exception as e:
+        console.print(f"[bold red]Unknown Error: {e}[/bold red]")
+
 def menu():
     while True:
         try:
