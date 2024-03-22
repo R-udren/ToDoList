@@ -2,8 +2,6 @@ from tasks.task import Task
 from database.database_manager import DatabaseManager
 from config import DB_NAME
 
-from config import TIME_FORMAT
-
 class TaskManager:
     commands = [
         "Create a task",
@@ -15,7 +13,7 @@ class TaskManager:
 
     def __init__(self, email : str):
         self.db = DatabaseManager(DB_NAME)
-        self.db.create_task_table("tasks", ["email TEXT", "description TEXT", "complete INTEGER", "due_date TEXT", "priority INTEGER", "create_date TEXT"])
+        self.db.create_task_table("tasks", ["email TEXT", "description TEXT", "complete INTEGER", "due_date REAL", "priority INTEGER", "create_date REAL"])
         self.records = self.db.read_records("tasks", email)
         self.tasks = [Task(*record) for record in self.records]
         self.email = email
@@ -24,7 +22,7 @@ class TaskManager:
         self.tasks.append(task)
         self.db.add_record('tasks', [task.creator_email, task.description, task.complete, task.due_date, int(task.priority), task.create_date])
 
-    def update_task(self, new_task: Task, old_task: Task):
+    def update_task(self, old_task: Task, new_task: Task):
         for (i, task) in enumerate(self.tasks):
             if task == old_task:
                 self.tasks[i] = new_task
