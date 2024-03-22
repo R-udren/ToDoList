@@ -149,7 +149,7 @@ def sort_filter_options():
         sort_by = Prompt.ask("Sort by", choices={"due date" : "due_date", "create date" : "create_date", "priority" : "priority"})
         filter_by = {
             "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both"),
-            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="All"),
+            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High", "All"], default="All"),
             "due_date": Prompt.ask("Due date", default=datetime.now().strftime(TIME_FORMAT)),
             "create_date": Prompt.ask("Create date")
         }
