@@ -3,9 +3,6 @@ from database.database_manager import DatabaseManager
 from config import DB_NAME
 
 from config import TIME_FORMAT
-from datetime import datetime
-from tasks.priority import Priority
-
 
 class TaskManager:
     commands = [
@@ -25,7 +22,7 @@ class TaskManager:
 
     def create_task(self, task: Task):
         self.tasks.append(task)
-        self.db.add_record('tasks', [task.creator_email, task.description, task.complete, task.due_date, task.priority, task.create_date])
+        self.db.add_record('tasks', [task.creator_email, task.description, task.complete, task.due_date, int(task.priority), task.create_date])
 
     def update_task(self, new_task: Task, old_task: Task):
         for (i, task) in enumerate(self.tasks):
