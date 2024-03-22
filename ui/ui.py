@@ -1,18 +1,17 @@
 from datetime import datetime, timedelta
+from typing import Union
 
 from rich.prompt import Prompt
 from rich.console import Console
 from rich.table import Table
-from typing import Union
 
 from tasks.task_manager import TaskManager
 from users.user_manager import UserManager
 from tasks.task import Task
 from tasks.priority import Priority
-
+from users.user import User
 import config
 from config import TIME_FORMAT
-from users.user import User
 
 
 console = Console()
@@ -49,7 +48,7 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
 def choose_date(date: datetime = None):
     date_options = ["Minutes", "Hours", "Days", "Weeks", "Months", "Years"]
     date = date if date else datetime.now()
-    date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by ", choices=date_options, default=None, show_default=False)
+    date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by", choices=date_options, default=None, show_default=False)
     match date_option:
         case "Minutes":
             date += timedelta(minutes=int(Prompt.ask("Minutes to add", default=0)))
@@ -68,9 +67,9 @@ def choose_date(date: datetime = None):
 
     return date.timestamp()
 
-def options_menu(user_id : str):
+def options_menu(user_email : str):
     console.print(create_table("Actions", TaskManager.commands))
-    task_manager = TaskManager(user_id)
+    task_manager = TaskManager(user_email)
     while True:
         try:
             option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
