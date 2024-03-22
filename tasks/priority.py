@@ -27,6 +27,9 @@ class Priority:
     def __str__(self):
         return list(self.LEVELS.keys())[list(self.LEVELS.values()).index(self.level)]
 
+    def __int__(self):
+        return self.level
+
     def __repr__(self):
         return f"Priority({self.__str__()})"
 
