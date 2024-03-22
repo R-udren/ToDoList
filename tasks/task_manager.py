@@ -41,4 +41,4 @@ class TaskManager:
 
     def save_to_db(self):
         for task in self.tasks:
-            self.db.add_record('tasks', tuple(task))
+            self.db.add_record('tasks', *tuple(task))
