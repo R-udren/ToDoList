@@ -10,6 +10,7 @@ from users.user_manager import UserManager
 from tasks.task import Task
 from tasks.priority import Priority
 
+import config
 from config import TIME_FORMAT
 from users.user import User
 
@@ -22,24 +23,15 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
     table.add_column("Nr", style="cyan", justify="center")
     if isinstance(commands[0], Task):
         table.add_column("Description", style="magenta")
-        table.add_column("Complete", style="magenta")
-        table.add_column("Due Date", style="magenta")
-        table.add_column("Priority", style="magenta")
-        table.add_column("Create Date", style="magenta")
+        table.add_column("Complete", style="green")
+        table.add_column("Due Date", style="yellow")
+        table.add_column("Priority", style="red")
+        table.add_column("Create Date", style="blue")
 
         for i, option in enumerate(commands, 1):
-            if option.complete:
-                complete = "True"
-            else:
-                complete = "False"
-            if option.priority == 1:
-                option.priority = "Low"
-            elif option.priority == 2:
-                option.priority = "Medium"
-            elif option.priority == 3:
-                option.priority = "High"
-            table.add_row(str(i), option.description, complete, str(option.due_date), option.priority, str(option.create_date))
+            table.add_row(str(i), *option.pretty_tuple())
         return table
+
     elif isinstance(commands[0], User):
         table.add_column("Username", style="magenta")
         table.add_column("Email", style="magenta")
@@ -53,6 +45,28 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
         for i, option in enumerate(commands, 1):
             table.add_row(str(i), option)
         return table
+
+def choose_date(date: datetime = None):
+    date_options = ["Minutes", "Hours", "Days", "Weeks", "Months", "Years"]
+    date = date if date else datetime.now()
+    date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by ", choices=date_options, default=None, show_default=False)
+    match date_option:
+        case "Minutes":
+            date += timedelta(minutes=int(Prompt.ask("Minutes to add", default=0)))
+        case "Hours":
+            date += timedelta(hours=int(Prompt.ask("Hours to add", default=0)))
+        case "Days":
+            date += timedelta(days=int(Prompt.ask("Days to add", default=0)))
+        case "Weeks":
+            date += timedelta(weeks=int(Prompt.ask("Weeks to add", default=0)))
+        case "Months":
+            date += timedelta(days=31 * int(Prompt.ask("Months to add", default=0)))
+        case "Years":
+            date += timedelta(days=365 * int(Prompt.ask("Years to add", default=0)))
+        case _:
+            date = datetime.strptime(Prompt.ask("Enter date", default=date.strftime(TIME_FORMAT)), TIME_FORMAT)
+
+    return date.timestamp()
 
 def options_menu(user_id : str):
     console.print(create_table("Actions", TaskManager.commands))
@@ -71,6 +85,17 @@ def login_menu():
     console.print(create_table("Actions", UserManager.options))
     user_manager = UserManager()
 
+    # Remember option
+    if config.remember:
+        console.print(f"[bold green]Remembered user: {config.remember_email}[/bold green]")
+        try:
+            options_menu(user_manager.login(config.remember_email, Prompt.ask("Password", password=True)))
+            exit()
+        except ValueError as ve:
+            console.print(f"[bold red]{ve}[/bold red]")
+
+
+
     option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
     try:
         match option:
@@ -79,34 +104,32 @@ def login_menu():
             case 2:
                 options_menu(user_manager.save_user(Prompt.ask("Username"), Prompt.ask("Email"), Prompt.ask("Password", password=True)))
             case 3:
-                user_manager.exit()
+                exit()
     except ValueError as ve:
         console.print(f"[bold red]{ve}[/bold red]")
     except Exception as e:
         console.print(f"[bold red]Unknown Error: {e}[/bold red]")
 
+def update_task(task: Task):
+    description = Prompt.ask("Description", default=task.description)
+    complete = Prompt.ask("Complete", choices=["True", "False"], default="True" if task.complete else "False")
+    due_date = choose_date(datetime.fromtimestamp(task.due_date))
+    priority = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low" if task.priority == 1 else "Medium" if task.priority == 2 else "High")
+    return Task(task.creator_email, description, complete, due_date, priority, task.create_date)
+
 def fill_task(email : str):
     description = Prompt.ask("Description")
-    date_options = "Minutes", "Hours", "Days", "Weeks", "Months", "Years"
-    date_option = Prompt.ask("Due date in", choices=[date_options], default="")
-    match date_option:
-        case "Minutes":
-            due_date = datetime.now() + timedelta(minutes=int(Prompt.ask("Minutes to add"), default=0))
-        case "Hours":
-            due_date = datetime.now() + timedelta(hours=int(Prompt.ask("Hours to add"), default=0))
-        case "Days":
-            due_date = datetime.now() + timedelta(days=int(Prompt.ask("Days to add"), default=0))
-        case "Weeks":
-            due_date = datetime.now() + timedelta(weeks=int(Prompt.ask("Weeks to add"), default=0))
-        case "Months":
-            due_date = datetime.now() + timedelta(weeks=int(Prompt.ask("Months to add"), default=0))
-        case "Years":
-            due_date = datetime.now() + timedelta(weeks=int(Prompt.ask("Years to add"), default=0))
-            
-    # due_date = Prompt.ask("Due date", default=datetime.now().strftime(TIME_FORMAT))
+    due_date = choose_date()
     priority_name = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low")
+
     priority = Priority(priority_name)
-    return Task(email=email, description=description, due_date=due_date, priority=priority)
+    try:
+        task = Task(email=email, description=description, due_date=due_date, priority=priority)
+        console.print(f"[bold green]Task created successfully![/bold green]")
+        return task
+    except ValueError as ve:
+        console.print(f"[bold red]{ve}[/bold red]")
+
 
 def show_tasks(tasks: list[Task]):
     table = Table(title="Tasks", title_style="bold blue")
@@ -118,7 +141,7 @@ def show_tasks(tasks: list[Task]):
     table.add_column("Create Date", style="blue")
 
     for task in tasks:
-        table.add_row(str(tasks.index(task) + 1), task.description, str(bool(task.complete)), task.due_date, str(task.priority), task.create_date)
+        table.add_row(str(tasks.index(task) + 1), *task.pretty_tuple())
     console.print(table)
 
 
@@ -127,7 +150,7 @@ def sort_filter_options():
         filter_by = {
             "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both"),
             "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="All"),
-            "due_date": Prompt.ask(f"Due date", default=datetime.now().strftime(TIME_FORMAT)),
+            "due_date": Prompt.ask("Due date", default=datetime.now().strftime(TIME_FORMAT)),
             "create_date": Prompt.ask("Create date")
         }
         return sort_by, filter_by
@@ -137,12 +160,17 @@ def tasks_menu(task_manager: TaskManager, option: int):
         case 1:
             task_manager.create_task(fill_task(task_manager.email))
         case 2:
-            task_manager.update_task(fill_task(task_manager.email), task_manager.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1])
+            if task_manager.tasks == []:
+                raise Exception("No tasks to update!")
+            task = task_manager.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1]
+            task_manager.update_task(task, update_task(task))
         case 3:
+            if task_manager.tasks == []:
+                raise Exception("No tasks to delete!")
             task_manager.delete_task(task_manager.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1])
         case 4:
             if task_manager.tasks == []:
-                raise Exception("No tasks to list")
+                raise Exception("No tasks to list!")
             sort_by, filter_by = None, None  # sort_filter_options()
             tasks = task_manager.list_tasks(task_manager.tasks, sort_by=sort_by, filter_by=filter_by)
             show_tasks(tasks)
