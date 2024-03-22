@@ -32,6 +32,8 @@ class Task:
         # Filter tasks
         for key, value in filter_by.items():
             if key == "complete":
+                if value == "Both":
+                    continue
                 tasks = [task for task in tasks if task.complete == value]
             elif key == "priority":
                 tasks = [task for task in tasks if task.priority == value]
