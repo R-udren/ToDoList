@@ -27,7 +27,6 @@ class UserManager:
         self.db.add_user('users', username, email, password)
         return email
 
-
     @staticmethod
     def exit():
         raise KeyboardInterrupt
