@@ -14,8 +14,8 @@ class TaskManager:
     def __init__(self, email : str):
         self.db = DatabaseManager(DB_NAME)
         self.db.create_task_table("tasks", ["email TEXT", "description TEXT", "complete INTEGER", "due_date REAL", "priority INTEGER", "create_date REAL"])
-        self._records = self.db.read_records("tasks", email)
-        self.tasks = [Task(*record) for record in self._records]
+        self.records = self.db.read_records("tasks", email)
+        self.tasks = [Task(*record) for record in self.records]
         self.email = email
 
     def create_task(self, task: Task):
@@ -41,4 +41,4 @@ class TaskManager:
 
     def save_to_db(self):
         for task in self.tasks:
-            self.db.add_record('tasks', [self.email, task.description, task.complete, task.due_date, task.priority, task.create_date])
+            self.db.add_record('tasks', [task.creator_email, task.description, task.complete, task.due_date, int(task.priority), task.create_date])
