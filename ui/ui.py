@@ -3,6 +3,7 @@ from datetime import datetime
 from rich.prompt import Prompt
 from rich.console import Console
 from rich.table import Table
+from typing import Union
 
 from tasks.task_manager import TaskManager
 from users.user_manager import UserManager
@@ -10,23 +11,51 @@ from tasks.task import Task
 from tasks.priority import Priority
 
 from config import TIME_FORMAT
+from users.user import User
 
 
 console = Console()
 
 
-def create_options_table(commands : list[str]):
-    table = Table(title="Options", title_style="bold blue")
+def create_table(name : str, commands : list[Union[str, Task, User]]):
+    table = Table(title=name, title_style="bold blue")
     table.add_column("Nr", style="cyan", justify="center")
-    table.add_column("Description", style="magenta")
+    if isinstance(commands[0], Task):
+        table.add_column("Description", style="magenta")
+        table.add_column("Complete", style="magenta")
+        table.add_column("Due Date", style="magenta")
+        table.add_column("Priority", style="magenta")
+        table.add_column("Create Date", style="magenta")
 
-    for i, option in enumerate(commands, 1):
-        table.add_row(str(i), option)
+        for i, option in enumerate(commands, 1):
+            if option.complete:
+                complete = "True"
+            else:
+                complete = "False"
+            if option.priority == 1:
+                option.priority = "Low"
+            elif option.priority == 2:
+                option.priority = "Medium"
+            elif option.priority == 3:
+                option.priority = "High"
+            table.add_row(str(i), option.description, complete, str(option.due_date), option.priority, str(option.create_date))
+        return table
+    elif isinstance(commands[0], User):
+        table.add_column("Username", style="magenta")
+        table.add_column("Email", style="magenta")
 
-    return table
+        for i, option in enumerate(commands, 1):
+            table.add_row(str(i), option.email, option.username)
+        return table
+    else:
+        table.add_column("Description", style="magenta")
+
+        for i, option in enumerate(commands, 1):
+            table.add_row(str(i), option)
+        return table
 
 def options_menu(user_id : str):
-    console.print(create_options_table(TaskManager.commands))
+    console.print(create_table("Actions", TaskManager.commands))
     task_manager = TaskManager(user_id)
     while True:
         try:
@@ -39,7 +68,7 @@ def options_menu(user_id : str):
             break
 
 def login_menu():
-    console.print(create_options_table(UserManager.options))
+    console.print(create_table("Actions", UserManager.options))
     user_manager = UserManager()
 
     option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
@@ -73,7 +102,7 @@ def show_tasks(tasks: list[Task]):
     table.add_column("Create Date", style="blue")
 
     for task in tasks:
-        table.add_row(str(tasks.index(task) + 1), task.description, str(bool(task.complete)), task.due_date, str(Priority(task.priority)), task.create_date)
+        table.add_row(str(tasks.index(task) + 1), task.description, str(bool(task.complete)), task.due_date, str(task.priority), task.create_date)
     console.print(table)
 
 
