@@ -20,7 +20,7 @@ class TaskManager:
 
     def create_task(self, task: Task):
         self.tasks.append(task)
-        self.db.add_record('tasks', [task.creator_email, task.description, task.complete, task.due_date, int(task.priority), task.create_date])
+        self.db.add_record('tasks', tuple(task))
 
     def update_task(self, old_task: Task, new_task: Task):
         for (i, task) in enumerate(self.tasks):
@@ -41,4 +41,4 @@ class TaskManager:
 
     def save_to_db(self):
         for task in self.tasks:
-            self.db.add_record('tasks', [task.creator_email, task.description, task.complete, task.due_date, int(task.priority), task.create_date])
+            self.db.add_record('tasks', tuple(task))

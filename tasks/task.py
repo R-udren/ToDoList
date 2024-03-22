@@ -26,7 +26,7 @@ class Task:
         return " - ".join(self.pretty_tuple())
 
     def __tuple__(self):
-        return self.description, self.complete, self.due_date, self.priority, self.create_date
+        return self.creator_email, self.description, self.complete, self.due_date, int(self.priority), self.create_date
 
 
 
