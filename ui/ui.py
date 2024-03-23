@@ -49,16 +49,15 @@ def choose_date(date: datetime = None):
     date_options = ["Minutes", "Hours", "Days", "Weeks", "Months", "Years"]
     date = date if date else datetime.now()
     date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by", choices=date_options, default=None, show_default=False)
-    while True:
-        if date_option is None:
-            break
-        try:
-            time = int(Prompt.ask("{0} to add".format(date_option), default=0))
-            if time < 0:
-                raise ValueError("Time cannot be negative")
-            break
-        except ValueError as ve:
-            console.print(f"[bold red]{ve}[/bold red]")
+    if date_option is not None:
+        while True:
+            try:
+                time = int(Prompt.ask("{0} to add".format(date_option), default=0))
+                if time < 0:
+                    raise ValueError("Time cannot be negative")
+                break
+            except ValueError as ve:
+                console.print(f"[bold red]{ve}[/bold red]")
 
     match date_option:
         case "Minutes":
