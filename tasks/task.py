@@ -9,14 +9,15 @@ from config import TIME_FORMAT
 
 class Task:
     def __init__(self, email : str, description: str, complete: bool = False,
-                 due_date: datetime = None, priority: Union[Priority, int] = Priority("Low"), create_date: int = None):
+                 due_date: datetime.timestamp = None, priority: Union[Priority, int, str] = Priority("Low"), create_date: int = None):
         self.creator_email = email
         self.description = description
-        self.complete = complete
-        self.due_date: datetime = due_date if due_date is not None else datetime.now()
-        if isinstance(priority, int):
-            priority = Priority(priority)
-        self.priority = priority
+        self.complete = bool(complete)
+        self.due_date = due_date if due_date is not None else datetime.now().timestamp()
+        if isinstance(priority, Priority):
+            self.priority = priority
+        else:
+            self.priority = Priority(priority)
         self.create_date = create_date if create_date is not None else datetime.now().timestamp()
 
     def pretty_tuple(self):
@@ -25,10 +26,8 @@ class Task:
     def __str__(self):
         return " - ".join(self.pretty_tuple())
 
-    def __tuple__(self):
-        return self.creator_email, self.description, self.complete, self.due_date, int(self.priority), self.create_date
-
-
+    def __iter__(self):
+        return iter((self.creator_email, self.description, int(self.complete), self.due_date, int(self.priority), self.create_date))
 
     @staticmethod
     def compare(tasks: list, sort_by: str, filter_by: dict, reverse: bool = False):
