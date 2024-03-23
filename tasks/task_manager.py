@@ -20,7 +20,7 @@ class TaskManager:
 
     def create_task(self, task: Task):
         self.tasks.append(task)
-        self.db.add_record('tasks', tuple(task))
+        self.db.add_record('tasks', list(task))
 
     def update_task(self, old_task: Task, new_task: Task):
         for (i, task) in enumerate(self.tasks):
@@ -29,7 +29,7 @@ class TaskManager:
                 self.db.clear_table('tasks', self.email)
                 self.save_to_db()
                 break
-        
+
 
     def delete_task(self, task_to_delete: Task):
         self.tasks.remove(task_to_delete)
@@ -41,4 +41,4 @@ class TaskManager:
 
     def save_to_db(self):
         for task in self.tasks:
-            self.db.add_record('tasks', *tuple(task))
+            self.db.add_record('tasks', list(task))
