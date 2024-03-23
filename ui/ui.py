@@ -50,6 +50,8 @@ def choose_date(date: datetime = None):
     date = date if date else datetime.now()
     date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by", choices=date_options, default=None, show_default=False)
     while True:
+        if date_option is None:
+            break
         try:
             time = int(Prompt.ask("{0} to add".format(date_option), default=0))
             if time < 0:
@@ -126,7 +128,15 @@ def update_task(task: Task):
     return Task(task.creator_email, description, complete, due_date, priority, task.create_date)
 
 def fill_task(email : str):
-    description = Prompt.ask("Description")
+    while True:
+        try:
+            description = Prompt.ask("Description")
+            if not description:
+                raise ValueError("Description cannot be empty")
+            break
+        except ValueError as ve:
+            console.print(f"[bold red]{ve}[/bold red]")
+            
     due_date = choose_date()
     priority_name = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low")
 
@@ -137,20 +147,6 @@ def fill_task(email : str):
         return task
     except ValueError as ve:
         console.print(f"[bold red]{ve}[/bold red]")
-
-
-def show_tasks(tasks: list[Task]):
-    table = Table(title="Tasks", title_style="bold blue")
-    table.add_column("Nr", style="cyan", justify="center")
-    table.add_column("Description", style="magenta")
-    table.add_column("Complete", style="green")
-    table.add_column("Due Date", style="yellow")
-    table.add_column("Priority", style="red")
-    table.add_column("Create Date", style="blue")
-
-    for task in tasks:
-        table.add_row(str(tasks.index(task) + 1), *task.pretty_tuple())
-    console.print(table)
 
 
 def sort_filter_options():
@@ -181,7 +177,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 raise Exception("No tasks to list!")
             sort_by, filter_by = None, None  # sort_filter_options()
             tasks = task_manager.list_tasks(task_manager.tasks, sort_by=sort_by, filter_by=filter_by)
-            show_tasks(tasks)
+            console.print(create_table("tasks", tasks))
         case 5:
             raise KeyboardInterrupt("Exiting...")
 
