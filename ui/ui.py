@@ -49,19 +49,28 @@ def choose_date(date: datetime = None):
     date_options = ["Minutes", "Hours", "Days", "Weeks", "Months", "Years"]
     date = date if date else datetime.now()
     date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by", choices=date_options, default=None, show_default=False)
+    while True:
+        try:
+            time = int(Prompt.ask("{0} to add".format(date_option), default=0))
+            if time < 0:
+                raise ValueError("Time cannot be negative")
+            break
+        except ValueError as ve:
+            console.print(f"[bold red]{ve}[/bold red]")
+
     match date_option:
         case "Minutes":
-            date += timedelta(minutes=int(Prompt.ask("Minutes to add", default=0)))
+            date += timedelta(minutes=time)
         case "Hours":
-            date += timedelta(hours=int(Prompt.ask("Hours to add", default=0)))
+            date += timedelta(hours=time)
         case "Days":
-            date += timedelta(days=int(Prompt.ask("Days to add", default=0)))
+            date += timedelta(days=time)
         case "Weeks":
-            date += timedelta(weeks=int(Prompt.ask("Weeks to add", default=0)))
+            date += timedelta(weeks=time)
         case "Months":
-            date += timedelta(days=31 * int(Prompt.ask("Months to add", default=0)))
+            date += timedelta(days=31 * time)
         case "Years":
-            date += timedelta(days=365 * int(Prompt.ask("Years to add", default=0)))
+            date += timedelta(days=365 * time)
         case _:
             date = datetime.strptime(Prompt.ask("Enter date", default=date.strftime(TIME_FORMAT)), TIME_FORMAT)
 
