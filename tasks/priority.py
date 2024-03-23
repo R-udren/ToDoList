@@ -18,7 +18,10 @@ class Priority:
             else:
                 raise ValueError("Invalid priority level")
         elif isinstance(level, int):
-            self.level = level
+            if level in self.LEVELS.values():
+                self.level = level
+            else:
+                raise ValueError("Invalid priority level")
         else:
             raise ValueError("Priority level must be a string or an integer")
 
