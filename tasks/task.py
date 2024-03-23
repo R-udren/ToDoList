@@ -20,6 +20,9 @@ class Task:
             self.priority = Priority(priority)
         self.create_date = create_date if create_date is not None else datetime.now().timestamp()
 
+    def mark_complete(self):
+        self.complete = True
+
     def pretty_tuple(self):
         return self.description, str(bool(self.complete)), datetime.fromtimestamp(self.due_date).strftime(TIME_FORMAT), str(self.priority), datetime.fromtimestamp(self.create_date).strftime(TIME_FORMAT)
 
