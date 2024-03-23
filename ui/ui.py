@@ -89,7 +89,7 @@ def login_menu():
         console.print(f"[bold green]Remembered user: {config.remember_email}[/bold green]")
         try:
             options_menu(user_manager.login(config.remember_email, Prompt.ask("Password", password=True)))
-            exit()
+            raise KeyboardInterrupt("Exiting...")
         except ValueError as ve:
             console.print(f"[bold red]{ve}[/bold red]")
 
@@ -103,7 +103,7 @@ def login_menu():
             case 2:
                 options_menu(user_manager.save_user(Prompt.ask("Username"), Prompt.ask("Email"), Prompt.ask("Password", password=True)))
             case 3:
-                exit()
+                raise KeyboardInterrupt("Exiting...")
     except ValueError as ve:
         console.print(f"[bold red]{ve}[/bold red]")
     except Exception as e:
@@ -111,9 +111,9 @@ def login_menu():
 
 def update_task(task: Task):
     description = Prompt.ask("Description", default=task.description)
-    complete = Prompt.ask("Complete", choices=["True", "False"], default="True" if task.complete else "False")
+    complete = Prompt.ask("Complete", choices=["True", "False"], default="True" if task.complete else "False") == "True"
     due_date = choose_date(datetime.fromtimestamp(task.due_date))
-    priority = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low" if task.priority == 1 else "Medium" if task.priority == 2 else "High")
+    priority = Prompt.ask("Priority", choices=Priority.LEVELS.keys(), default=str(task.priority))
     return Task(task.creator_email, description, complete, due_date, priority, task.create_date)
 
 def fill_task(email : str):
@@ -174,7 +174,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             tasks = task_manager.list_tasks(task_manager.tasks, sort_by=sort_by, filter_by=filter_by)
             show_tasks(tasks)
         case 5:
-            task_manager.exit()
+            raise KeyboardInterrupt("Exiting...")
 
 def menu():
     while True:
@@ -183,6 +183,3 @@ def menu():
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Goodbye![/bold yellow]")
             break
-
-def exit():
-    raise KeyboardInterrupt("Exiting...")
