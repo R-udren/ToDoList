@@ -11,9 +11,10 @@ class Priority:
 
     def __init__(self, level: str | int):
         if isinstance(level, str):
-            level = level.capitalize()
-            if level in self.LEVELS:
-                self.level = self.LEVELS[level]
+            if level in ("1", "2", "3"):
+                level = int(level)
+            elif level.capitalize() in self.LEVELS:
+                self.level = self.LEVELS[level.capitalize()]
             else:
                 raise ValueError("Invalid priority level")
         elif isinstance(level, int):
@@ -57,3 +58,5 @@ class Priority:
         if isinstance(other, Priority):
             return self.level >= other.level
         return False
+
+
