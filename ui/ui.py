@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import time
 from typing import Union
 
 from rich.prompt import Prompt
@@ -78,6 +79,7 @@ def choose_date(date: datetime = None):
     return date.timestamp()
 
 def options_menu(user_email : str):
+    time.sleep(0.1)
     console.clear()
     task_manager = TaskManager(user_email)
     while True:
@@ -88,8 +90,10 @@ def options_menu(user_email : str):
             tasks_menu(task_manager, option)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
+            time.sleep(5)
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Logging out![/bold yellow]")
+            time.sleep(5)
             break
 
 def login_menu():
@@ -104,10 +108,12 @@ def login_menu():
             raise KeyboardInterrupt("Exiting...")
         except ValueError as ve:
             console.print(f"[bold red]{ve}[/bold red]")
+            time.sleep(5)
 
 
 
     option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
+    time.sleep(0.2)
     console.clear()
     try:
         match option:
@@ -121,8 +127,11 @@ def login_menu():
                 raise KeyboardInterrupt("Exiting...")
     except ValueError as ve:
         console.print(f"[bold red]{ve}[/bold red]")
+        time.sleep(5)
     except Exception as e:
         console.print(f"[bold red]Unknown Error: {e}[/bold red]")
+        time.sleep(5)
+    
 
 def update_task(task: Task):
     description = Prompt.ask("Description", default=task.description)
