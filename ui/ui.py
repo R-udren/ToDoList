@@ -191,7 +191,10 @@ def tasks_menu(task_manager: TaskManager, option: int):
             if task_manager.tasks == []:
                 raise Exception("No tasks to delete!")
             console.print(create_table("tasks", task_manager.tasks))
-            task_manager.delete_task(task_manager.tasks[int(Prompt.ask("Select an task to delete", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1])
+            choice = int(Prompt.ask("Select an task to delete", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
+            if choice == -1:
+                raise ValueError("aborting...")
+            task_manager.delete_task(task_manager.tasks[choice])
         case 4:
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
