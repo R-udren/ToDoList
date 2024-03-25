@@ -90,10 +90,10 @@ def options_menu(user_email : str):
             tasks_menu(task_manager, option)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
-            time.sleep(5)
+            time.sleep(3)
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Logging out![/bold yellow]")
-            time.sleep(5)
+            time.sleep(3)
             break
 
 def login_menu():
@@ -108,7 +108,7 @@ def login_menu():
             raise KeyboardInterrupt("Exiting...")
         except ValueError as ve:
             console.print(f"[bold red]{ve}[/bold red]")
-            time.sleep(5)
+            time.sleep(3)
 
 
 
@@ -127,10 +127,10 @@ def login_menu():
                 raise KeyboardInterrupt("Exiting...")
     except ValueError as ve:
         console.print(f"[bold red]{ve}[/bold red]")
-        time.sleep(5)
+        time.sleep(3)
     except Exception as e:
         console.print(f"[bold red]Unknown Error: {e}[/bold red]")
-        time.sleep(5)
+        time.sleep(3)
     
 
 def update_task(task: Task):
@@ -199,6 +199,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             sort_by, filter_by = None, None  # sort_filter_options()
             tasks = task_manager.list_tasks(task_manager.tasks, sort_by=sort_by, filter_by=filter_by)
             console.print(create_table("tasks", tasks))
+            Prompt.ask("Press enter to continue")
         case 5:
             raise KeyboardInterrupt("Exiting...")
 
