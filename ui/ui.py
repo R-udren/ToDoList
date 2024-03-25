@@ -78,9 +78,11 @@ def choose_date(date: datetime = None):
     return date.timestamp()
 
 def options_menu(user_email : str):
-    console.print(create_table("Actions", TaskManager.commands))
+    console.clear()
     task_manager = TaskManager(user_email)
     while True:
+        console.clear()
+        console.print(create_table("Commands", task_manager.commands))
         try:
             option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
             tasks_menu(task_manager, option)
@@ -106,11 +108,14 @@ def login_menu():
 
 
     option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
+    console.clear()
     try:
         match option:
             case 1:
+                console.print("[bold green]Logging in![/bold green]")
                 options_menu(user_manager.login(Prompt.ask("Email"), Prompt.ask("Password", password=True)))
             case 2:
+                console.print("[bold blue]Creating an account![/bold blue]")
                 options_menu(user_manager.save_user(Prompt.ask("Username"), Prompt.ask("Email"), Prompt.ask("Password", password=True)))
             case 3:
                 raise KeyboardInterrupt("Exiting...")
@@ -142,6 +147,7 @@ def fill_task(email : str):
     priority = Priority(priority_name)
     try:
         task = Task(email=email, description=description, due_date=due_date, priority=priority)
+        console.clear()
         console.print(f"[bold green]Task created successfully![/bold green]")
         return task
     except ValueError as ve:
@@ -159,19 +165,26 @@ def sort_filter_options():
         return sort_by, filter_by
 
 def tasks_menu(task_manager: TaskManager, option: int):
+    console.clear()
     match option:
         case 1:
+            console.print("[bold green]Creating a task![/bold green]")
             task_manager.create_task(fill_task(task_manager.email))
         case 2:
+            console.print("[bold blue]Updating a task![/bold blue]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to update!")
-            task = task_manager.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1]
+            console.print(create_table("tasks", task_manager.tasks))
+            task = task_manager.tasks[int(Prompt.ask("Select an task to update", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1]
             task_manager.update_task(task, update_task(task))
         case 3:
+            console.print("[bold red]Deleting a task![/bold red]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to delete!")
-            task_manager.delete_task(task_manager.tasks[int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1])
+            console.print(create_table("tasks", task_manager.tasks))
+            task_manager.delete_task(task_manager.tasks[int(Prompt.ask("Select an task to delete", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1])
         case 4:
+            console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
             sort_by, filter_by = None, None  # sort_filter_options()
@@ -183,6 +196,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
 def menu():
     while True:
         try:
+            console.clear()
             login_menu()
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Goodbye![/bold yellow]")
