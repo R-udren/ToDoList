@@ -115,26 +115,26 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
                 tasks = task_manager.sort_tasks(task_manager.tasks, sort_by=sort_by, reversed=reverse)
                 
-            elif catagory == "Filter":
-                catagory = Prompt.ask("Sort or search", choices=["Complete", "Priority", "Due date", "Create date"])
-                match catagory:
-                    case "complete":
+            elif category == "Filter":
+                category = Prompt.ask("Sort or search", choices=["Complete", "Priority", "Due date", "Create date"])
+                match category:
+                    case "Complete":
                         filter_by = {
-                            "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both")
+                            "complete": Prompt.ask("Complete", choices=["True", "False"], default="False") == "True"
                         }
-                    case "priority":
+                    case "Priority":
                         filter_by = {
-                            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High", "All"], default="All")
+                            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="High")
                         }
-                    case "due date":
+                    case "Due date":
                         date_options = ["Days", "Weeks", "Months", "Years"]
                         date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
                         time = int(Prompt.ask("{0} to add".format(date_option), default="0", show_default=False))
                         filter_by = {
-                            "due date": date_option + " " + str(time)
+                            "due_date": date_option + " " + str(time)
 
                         }
-                    case "create date":
+                    case "Create date":
                         date_options = ["Days", "Weeks", "Months", "Years"]
                         date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
                         time = int(Prompt.ask("{0} to add".format(date_option), default="0", show_default=False))

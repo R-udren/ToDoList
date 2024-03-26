@@ -58,8 +58,6 @@ class Task:
         # Filter tasks
         for key, value in filter_by.items():
             if key == "complete":
-                if value == "Both":
-                    continue
                 tasks = [task for task in tasks if task.complete == value]
             elif key == "priority":
                 tasks = [task for task in tasks if task.priority == value]
@@ -81,13 +79,13 @@ class Task:
     def timestamp(optionandvalue : str):
         timeamount = optionandvalue.split(" ")
         match timeamount[0]:
-            case "Day":
+            case "Days":
                 value = datetime.now().timestamp() + 86400 * int(timeamount[1])
-            case "Week":
+            case "Weeks":
                 value = datetime.now().timestamp() + 604800 * int(timeamount[1])
-            case "Month":
+            case "Months":
                 value = datetime.now().timestamp() + 2629746 * int(timeamount[1])
-            case "Year":
+            case "Years":
                 value = datetime.now().timestamp() + 31556952 * int(timeamount[1])
         return value
 
