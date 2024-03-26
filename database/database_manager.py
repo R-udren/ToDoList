@@ -6,6 +6,7 @@ class DatabaseManager:
         self.db = sqlite3.connect(db_name)
         self.cursor = self.db.cursor()
 
+    # Task table functions
     def create_task_table(self, table_name: str, columns: list):
         columns.append('FOREIGN KEY(email) REFERENCES users(email)')
         columns = ', '.join(columns)
@@ -34,8 +35,7 @@ class DatabaseManager:
         self.cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
         self.db.commit()
 
-    ## User table functions
-        
+    # User table functions
     def create_user_table(self, table_name: str, columns: list):
         columns = ', '.join(columns)
         self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns})')

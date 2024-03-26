@@ -13,14 +13,27 @@ class UserManager:
         "Exit"
     ]
 
-    def login(self, email, password):
+    def login(self, email, password) -> str:
+        """
+        Log in a user
+        :param email: str: email of the user
+        :param password: str: password of the user
+        :return: str: email of the user
+        """
         user = self.db.get_record('users', 'email', email)
         if user:
             if User.verify_password(user[0][2], password):
                 return user[0][1]
         raise ValueError("Invalid email or password!")
 
-    def save_user(self, username, email, password):
+    def save_user(self, username, email, password) -> str:
+        """
+        Save a user to the database
+        :param username: str: username of the user
+        :param email: str: email of the user
+        :param password: str: password of the user
+        :return: str: email of the user
+        """
         username = User.validate_username(username, self.db)
         email = User.validate_email(email, self.db)
         password = User.hash_password(User.validate_password(password))

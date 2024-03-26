@@ -1,5 +1,6 @@
-from tasks.task import Task
 from database.database_manager import DatabaseManager
+from tasks.task import Task
+
 from config import DB_NAME
 
 class TaskManager:
