@@ -36,8 +36,11 @@ class TaskManager:
         self.db.clear_table('tasks', self.email)
         self.save_to_db()
 
-    def list_tasks(self, tasks: list[Task], sort_by=None, filter_by=None) -> list[Task]:
-        return Task.compare(tasks, sort_by, filter_by) if sort_by or filter_by else tasks
+    def sort_tasks(self, tasks: list[Task], sort_by=None, reversed=False) -> list[Task]:
+        return Task.compare(tasks, sort_by, reversed) if sort_by else tasks
+    
+    def search_tasks(self, tasks: list[Task], filter_by: dict) -> list[Task]:
+        return Task.search(tasks, filter_by) if filter_by else tasks
 
     def save_to_db(self):
         for task in self.tasks:

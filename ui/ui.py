@@ -101,14 +101,14 @@ def login_menu():
     user_manager = UserManager()
 
     # Remember option
-    if config.remember:
-        console.print(f"[bold green]Remembered user: {config.remember_email}[/bold green]")
-        try:
-            options_menu(user_manager.login(config.remember_email, Prompt.ask("Password", password=True)))
-            raise KeyboardInterrupt("Exiting...")
-        except ValueError as ve:
-            console.print(f"[bold red]{ve}[/bold red]")
-            time.sleep(1)
+    # if config.remember:
+    #     console.print(f"[bold green]Remembered user: {config.remember_email}[/bold green]")
+    #     try:
+    #         options_menu(user_manager.login(config.remember_email, Prompt.ask("Password", password=True)))
+    #         raise KeyboardInterrupt("Exiting...")
+    #     except ValueError as ve:
+    #         console.print(f"[bold red]{ve}[/bold red]")
+    #         time.sleep(1)
 
 
 
@@ -191,7 +191,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             if task_manager.tasks == []:
                 raise Exception("No tasks to delete!")
             console.print(create_table("tasks", task_manager.tasks))
-            choice = int(Prompt.ask("Select an task to delete", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
+            choice = int(Prompt.ask("Select an task to delete (To abort input nothing!)", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
             if choice == -1:
                 raise ValueError("aborting...")
             task_manager.delete_task(task_manager.tasks[choice])
@@ -199,8 +199,22 @@ def tasks_menu(task_manager: TaskManager, option: int):
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
-            sort_by, filter_by = None, None  # sort_filter_options()
-            tasks = task_manager.list_tasks(task_manager.tasks, sort_by=sort_by, filter_by=filter_by)
+            catagory = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="None")
+            if catagory == "Sort":
+                sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
+                reverse = Prompt.ask("What order should it be?", choices={"Ascending" : "False", "Descending" : "True"}, default={"Ascending" : "False"}) == "True"
+                tasks = task_manager.sort_tasks(task_manager.tasks, sort_by=sort_by, reversed=reverse)
+            elif catagory == "Filter":
+                filter_by = {
+                    "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both"),
+                    "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High", "All"], default="All"),
+                    "due_date": Prompt.ask("Due date", default=datetime.now().strftime(TIME_FORMAT)),
+                    "create_date": Prompt.ask("Create date")
+                }
+                tasks = task_manager.search_tasks(task_manager.tasks, filter_by)
+            else:
+                tasks = task_manager.tasks
+
             console.print(create_table("tasks", tasks))
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 5:

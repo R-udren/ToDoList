@@ -33,13 +33,26 @@ class Task:
         return iter((self.creator_email, self.description, int(self.complete), self.due_date, int(self.priority), self.create_date))
 
     @staticmethod
-    def compare(tasks: list, sort_by: str, filter_by: dict, reverse: bool = False):
+    def compare(tasks: list, sort_by: str, reversed : bool):
         """
-        Compare tasks by sort_by and filter_by
+        Compare tasks by sort_by
         :param tasks: list of tasks to compare
         :param sort_by: attribute to sort by (due_date, create_date, priority)
-        :param filter_by: dictionary of attributes to filter by (complete, priority, due_date, create_date)
         :param reverse: reverse sort order
+        :return: list of tasks
+        """
+        # Sort tasks
+        if sort_by in ["due_date", "create_date", "priority"]:
+            tasks.sort(key=attrgetter(sort_by), reverse=reversed)
+
+        return tasks
+    
+    @staticmethod
+    def search(tasks: list, filter_by: dict):
+        """ 
+        Compare tasks by filter_by
+        :param tasks: list of tasks to compare
+        :param filter_by: dictionary of attributes to filter by (complete, priority, due_date, create_date)
         :return: list of tasks
         """
         # Filter tasks
@@ -54,11 +67,7 @@ class Task:
                 tasks = [task for task in tasks if task.due_date == value]
             elif key == "create_date":
                 tasks = [task for task in tasks if task.create_date == value]
-
-        # Sort tasks
-        if sort_by in ["due_date", "create_date", "priority"]:
-            tasks.sort(key=attrgetter(sort_by), reverse=reverse)
-
         return tasks
+        
 
 
