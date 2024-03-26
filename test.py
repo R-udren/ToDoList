@@ -72,5 +72,8 @@ class TestPriority(unittest.TestCase):
         self.assertEqual(self.medium, Priority("Medium"))
         self.assertEqual(self.high, Priority("High"))
 
-if __name__ == '__main__':
+def start_tests():
     unittest.main()
+
+if __name__ == '__main__':
+    start_tests()
