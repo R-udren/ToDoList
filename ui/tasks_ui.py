@@ -145,7 +145,10 @@ def tasks_menu(task_manager: TaskManager, option: int):
             else:
                 tasks = task_manager.tasks
 
-            console.print(create_table("tasks", tasks))
+            if tasks != []:
+                console.print(create_table("tasks", tasks))
+            else:
+                console.print("[bold violet]No tasks found![/bold violet]")
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 5:
             raise KeyboardInterrupt("Exiting...")

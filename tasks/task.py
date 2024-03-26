@@ -60,6 +60,7 @@ class Task:
             if key == "complete":
                 tasks = [task for task in tasks if task.complete == value]
             elif key == "priority":
+                value = Priority(value)
                 tasks = [task for task in tasks if task.priority == value]
             elif key == "due_date":
                 
