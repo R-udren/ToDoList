@@ -16,6 +16,11 @@ def main():
     parser.add_argument("--export-tasks", action="store_true", help="Export tasks to a CSV file")
 
     args = parser.parse_args()
+    if any([args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks]):
+        args.menu = False
 
-    if args.menu:
-        menu()
+    arguments = [args.menu, args.email, args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks]
+    menu(*arguments)
+
+if __name__ == "__main__":
+    main()

@@ -1,26 +1,25 @@
 # To Do List
-Task management app written on Python ~~using FastAPI and MySQL~~.
+
+Task management app written on Python
 
 ## Features
 
-- [ ] Create a task
-- [ ] Update (Edit) a task
-- [ ] Delete a task
-- [ ] List all tasks
-- [ ] Sort tasks by parameters
-- [ ] Mark a task as done
+- Add tasks
+- Remove tasks
+- Mark tasks as done
+- Save tasks to file
 
 ## Installation
 
 1. Clone the repository
-    ```bash
-    git clone https://github.com/R-udren/ToDoList
-    ```
+   ```bash
+   git clone https://github.com/R-udren/ToDoList
+   ```
 2. Install the dependencies
-    ```bash
-    python -m pip install -r requirements.txt
-    ```
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
 3. Run the app
-    ```bash
-    python main.py
-    ```
+   ```bash
+   python main.py
+   ```

@@ -1,7 +1,7 @@
 from database.database_manager import DatabaseManager
 from tasks.task import Task
 
-from config import DB_NAME
+from config import DB_NAME, CSV_NAME
 
 class TaskManager:
     commands = [
@@ -9,6 +9,7 @@ class TaskManager:
         "Update a task",
         "Delete a task",
         "List all tasks",
+        "Export to CSV",
         "Exit"
     ]
 
@@ -46,3 +47,6 @@ class TaskManager:
     def save_to_db(self):
         for task in self.tasks:
             self.db.add_record('tasks', list(task))
+
+    def export_tasks(self, csv_name: str = CSV_NAME):
+        self.db.export_to_csv('tasks', csv_name, self.email)

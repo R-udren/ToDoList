@@ -4,7 +4,7 @@ from rich.prompt import Prompt
 from rich.console import Console
 
 from users.user_manager import UserManager
-from main_ui import create_table
+from ui.main_ui import create_table
 
 console = Console()
 

@@ -7,7 +7,7 @@ from rich.console import Console
 from tasks.task_manager import TaskManager
 from tasks.task import Task
 from tasks.priority import Priority
-from main_ui import create_table
+from ui.main_ui import create_table
 from config import TIME_FORMAT
 
 console = Console()
