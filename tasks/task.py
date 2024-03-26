@@ -64,10 +64,31 @@ class Task:
             elif key == "priority":
                 tasks = [task for task in tasks if task.priority == value]
             elif key == "due_date":
-                tasks = [task for task in tasks if task.due_date == value]
+                
+                value = Task.timestamp(value)
+                t1 = value + 86400 * 2
+                t2 = value - 86400 * 2
+                tasks = [task for task in tasks if t2 < task.due_date < t1]
+                return tasks
             elif key == "create_date":
-                tasks = [task for task in tasks if task.create_date == value]
+                value = Task.timestamp(value)
+                t1 = value + 86400 * 2
+                t2 = value - 86400 * 2
+                tasks = [task for task in tasks if t2 < task.due_date < t1]
         return tasks
-        
+    
+    @staticmethod
+    def timestamp(optionandvalue : str):
+        timeamount = optionandvalue.split(" ")
+        match timeamount[0]:
+            case "Day":
+                value = datetime.now().timestamp() + 86400 * int(timeamount[1])
+            case "Week":
+                value = datetime.now().timestamp() + 604800 * int(timeamount[1])
+            case "Month":
+                value = datetime.now().timestamp() + 2629746 * int(timeamount[1])
+            case "Year":
+                value = datetime.now().timestamp() + 31556952 * int(timeamount[1])
+        return value
 
 

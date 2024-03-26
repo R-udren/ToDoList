@@ -13,7 +13,7 @@ from config import TIME_FORMAT
 console = Console()
 
 def choose_date(date: datetime = None):
-    date_options = ["Minutes", "Hours", "Days", "Weeks", "Months", "Years"]
+    date_options = ["Days", "Weeks", "Months", "Years"]
     date = date if date else datetime.now()
     date_option = Prompt.ask(f"Change date {date.strftime(TIME_FORMAT)} by", choices=date_options, default=None, show_default=False)
     if date_option is not None:
@@ -27,10 +27,6 @@ def choose_date(date: datetime = None):
                 console.print(f"[bold red]{ve}[/bold red]")
 
     match date_option:
-        case "Minutes":
-            date += timedelta(minutes=time)
-        case "Hours":
-            date += timedelta(hours=time)
         case "Days":
             date += timedelta(days=time)
         case "Weeks":
@@ -118,12 +114,33 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
                 reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
                 tasks = task_manager.sort_tasks(task_manager.tasks, sort_by=sort_by, reversed=reverse)
+                
+            elif catagory == "Filter":
+                catagory = Prompt.ask("Sort or search", choices=["Complete", "Priority", "Due date", "Create date"])
+                match catagory:
+                    case "complete":
+                        filter_by = {
+                            "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both")
+                        }
+                    case "priority":
+                        filter_by = {
+                            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High", "All"], default="All")
+                        }
+                    case "due date":
+                        date_options = ["Days", "Weeks", "Months", "Years"]
+                        date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
+                        time = int(Prompt.ask("{0} to add".format(date_option), default="0", show_default=False))
+                        filter_by = {
+                            "due date": date_option + " " + str(time)
 
-            elif category == "Filter":
-                filter_by = {
-                    "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both"),
-                    "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High", "All"], default="All")
-                }
+                        }
+                    case "create date":
+                        date_options = ["Days", "Weeks", "Months", "Years"]
+                        date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
+                        time = int(Prompt.ask("{0} to add".format(date_option), default="0", show_default=False))
+                        filter_by = {
+                            "create_date": date_option + " " + str(time)
+                        }
                 tasks = task_manager.search_tasks(task_manager.tasks, filter_by)
             else:
                 tasks = task_manager.tasks
