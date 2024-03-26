@@ -37,7 +37,7 @@ class TaskManager:
         self.save_to_db()
 
     def sort_tasks(self, tasks: list[Task], sort_by=None, reversed=False) -> list[Task]:
-        return Task.compare(tasks, sort_by, reversed) if sort_by else tasks
+        return Task.compare(tasks=tasks, sort_by=sort_by, reversed=reversed) if sort_by else tasks
     
     def search_tasks(self, tasks: list[Task], filter_by: dict) -> list[Task]:
         return Task.search(tasks, filter_by) if filter_by else tasks
