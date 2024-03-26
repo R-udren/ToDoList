@@ -199,14 +199,14 @@ def tasks_menu(task_manager: TaskManager, option: int):
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
-            catagory = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="None")
+            category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="None")
 
-            if catagory == "Sort":
+            if category == "Sort":
                 sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
                 reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
                 tasks = task_manager.sort_tasks(task_manager.tasks, sort_by=sort_by, reversed=reverse)
                 
-            elif catagory == "Filter":
+            elif category == "Filter":
                 filter_by = {
                     "complete": Prompt.ask("Complete", choices=["True", "False", "Both"], default="Both"),
                     "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High", "All"], default="All")
