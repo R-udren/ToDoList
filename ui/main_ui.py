@@ -49,7 +49,7 @@ def menu(menu: bool = True, email=None,
             console.print(f"[bold red]{e}[/bold red]")
         except KeyboardInterrupt:
             console.print("[bold yellow]Exiting...[/bold yellow]")
-            continue
+            break
 
     if menu and email:
         from ui.tasks_ui import options_menu
