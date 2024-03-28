@@ -40,8 +40,14 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
 def menu(menu: bool = True, email=None,
          list_tasks: bool = False, add_task: bool = False, update_task: bool = False, delete_task: bool = False, export_tasks: bool = False):
     from ui.login_ui import login_menu
-    email = login_menu(email if email else None)
+    while True:
+        try:
+            console.clear()
+            email = login_menu(email if email else None)
 
-    if menu and email:
-        from ui.tasks_ui import options_menu
-        options_menu(email)
+            if menu and email:
+                from ui.tasks_ui import options_menu
+                options_menu(email)
+        except KeyboardInterrupt as e:
+            console.print(f"[bold red]{e}[/bold red]")
+            break

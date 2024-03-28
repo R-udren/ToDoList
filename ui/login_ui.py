@@ -34,12 +34,3 @@ def login_menu(user_email = None):
     except Exception as e:
         console.print(f"[bold red]Error: {e}[/bold red]")
         time.sleep(1)
-
-def login():
-    while True:
-            try:
-                console.clear()
-                login_menu()
-            except KeyboardInterrupt:
-                console.print("\n[bold yellow]Goodbye![/bold yellow]")
-                break
