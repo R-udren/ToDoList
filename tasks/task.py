@@ -32,6 +32,9 @@ class Task:
     def __iter__(self):
         return iter((self.creator_email, self.description, int(self.complete), self.due_date, int(self.priority), self.create_date))
 
+    def csv(self):
+        return ','.join(self.pretty_tuple())
+
     @staticmethod
     def compare(tasks: list, sort_by: str, reversed : bool):
         """
