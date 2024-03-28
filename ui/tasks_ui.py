@@ -170,5 +170,4 @@ def options_menu(user_email : str):
             time.sleep(1)
         except KeyboardInterrupt:
             console.print("\n[bold yellow]Logging out![/bold yellow]")
-            time.sleep(1)
             break
