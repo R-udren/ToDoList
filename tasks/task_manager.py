@@ -48,5 +48,7 @@ class TaskManager:
         for task in self.tasks:
             self.db.add_record('tasks', list(task))
 
-    def export_tasks(self, csv_name: str = CSV_NAME):
-        self.db.export_to_csv('tasks', csv_name, self.email)
+    def export_tasks(self, csv_name: str=CSV_NAME):
+        with open(csv_name, 'w') as file:
+            for task in self.tasks:
+                file.write(task.csv() + '\n')
