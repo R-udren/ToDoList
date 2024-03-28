@@ -54,9 +54,6 @@ def menu(menu: bool = True, email=None,
     if menu and email:
         from ui.tasks_ui import options_menu
         options_menu(email)
-    else:
-        if not email:
-            console.print("[bold red]You need to login first![/bold red]")
 
 
         from ui.tasks_ui import tasks_menu
