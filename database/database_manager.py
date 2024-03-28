@@ -55,10 +55,3 @@ class DatabaseManager:
 
     def close(self):
         self.db.close()
-
-    def export_to_csv(self, table_name: str, csv_name: str, email: str):
-        self.cursor.execute(f'SELECT * FROM {table_name} WHERE email = ?', (email,))
-        with open(f'{csv_name}.csv', 'w') as file:
-            for record in self.cursor.fetchall():
-                file.write(','.join([str(col) for col in record]) + '\n')
-        self.db.commit()
