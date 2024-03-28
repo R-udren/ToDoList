@@ -8,7 +8,7 @@ from tasks.task_manager import TaskManager
 from tasks.task import Task
 from tasks.priority import Priority
 from ui.main_ui import create_table
-from config import TIME_FORMAT
+from config import TIME_FORMAT, CSV_NAME
 
 console = Console()
 
@@ -83,7 +83,6 @@ def sort_filter_options():
         return sort_by, filter_by
 
 def tasks_menu(task_manager: TaskManager, option: int):
-    console.clear()
     match option:
         case 1:
             console.print("[bold green]Creating a task![/bold green]")
@@ -108,7 +107,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
-            category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="None")
+            category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="Skip")
 
             if category == "Sort":
                 sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
@@ -151,6 +150,8 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 console.print("[bold violet]No tasks found![/bold violet]")
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 5:
+            task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+        case 6:
             raise KeyboardInterrupt("Exiting...")
 
 def options_menu(user_email : str):
@@ -162,6 +163,7 @@ def options_menu(user_email : str):
         console.print(create_table("Commands", task_manager.commands))
         try:
             option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
+            console.clear()
             tasks_menu(task_manager, option)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
