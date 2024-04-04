@@ -1,7 +1,8 @@
 from database.database_manager import DatabaseManager
 from tasks.task import Task
+from datetime import datetime
 
-from config import DB_NAME, CSV_NAME
+from config import DB_NAME, CSV_NAME, TIME_FORMAT
 
 class TaskManager:
     commands = [
@@ -10,6 +11,7 @@ class TaskManager:
         "Delete a task",
         "List all tasks",
         "Export to CSV",
+        "Import from CSV",
         "Exit"
     ]
 
@@ -52,3 +54,16 @@ class TaskManager:
         with open(csv_name, 'w') as file:
             for task in self.tasks:
                 file.write(task.csv() + '\n')
+    
+    def import_tasks(self, csv_name: str=CSV_NAME):
+        with open(csv_name, 'r') as file:
+            for line in file:
+                task = line.strip().split(',')
+                task[1] = task[1] == 'True'	# Convert complete to boolean
+                task[2] = datetime.strptime(task[2], TIME_FORMAT).timestamp() # Convert due_date to timestamp
+                task[4] = datetime.strptime(task[4], TIME_FORMAT).timestamp() # Convert create_date to timestamp
+                ttask = Task(self.email, task[0], task[1], task[2], task[3], task[4])
+                self.tasks.append(ttask)
+                
+                self.db.add_record('tasks', list(ttask))
+                

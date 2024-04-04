@@ -152,6 +152,8 @@ def tasks_menu(task_manager: TaskManager, option: int):
         case 5:
             task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
         case 6:
+            task_manager.import_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+        case 7:
             raise KeyboardInterrupt("Exiting...")
 
 def options_menu(user_email : str):
