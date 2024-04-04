@@ -62,8 +62,14 @@ class TaskManager:
                 task[1] = task[1] == 'True'	# Convert complete to boolean
                 task[2] = datetime.strptime(task[2], TIME_FORMAT).timestamp() # Convert due_date to timestamp
                 task[4] = datetime.strptime(task[4], TIME_FORMAT).timestamp() # Convert create_date to timestamp
-                ttask = Task(self.email, task[0], task[1], task[2], task[3], task[4])
-                self.tasks.append(ttask)
-                
-                self.db.add_record('tasks', list(ttask))
-                
+                if not self.task_exists(task[4]):
+                    ttask = Task(self.email, task[0], task[1], task[2], task[3], task[4])
+                    self.tasks.append(ttask)
+                    
+                    self.db.add_record('tasks', list(ttask))
+
+    def task_exists(self, create_date):
+        for task in self.tasks:
+            if task.create_date == create_date:
+                return True
+        return False

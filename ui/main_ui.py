@@ -14,7 +14,7 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
     table = Table(title=name, title_style="bold blue")
     table.add_column("Nr", style="cyan", justify="center")
     if isinstance(commands[0], Task):  # Create Task table
-        table.add_column("Description", style="magenta")
+        table.add_column("Description", style="magenta", overflow="fold")
         table.add_column("Complete", style="green")
         table.add_column("Due Date", style="yellow")
         table.add_column("Priority", style="red")
