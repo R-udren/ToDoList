@@ -11,7 +11,7 @@ console = Console()
 
 
 def create_table(name : str, commands : list[Union[str, Task, User]]):
-    table = Table(title=name, title_style="bold blue")
+    table = Table(title=name, title_style="bold blue", show_lines=True)
     table.add_column("Nr", style="cyan", justify="center")
     if isinstance(commands[0], Task):  # Create Task table
         table.add_column("Description", style="magenta", overflow="fold")
@@ -59,6 +59,7 @@ def menu(menu: bool = True, email=None,
         from ui.tasks_ui import tasks_menu
         option = {add_task: 1, update_task: 2, delete_task: 3, list_tasks: 4, export_tasks: 5}.get(True, 6)
         try:
+            console.clear()
             tasks_menu(TaskManager(email), option)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")

@@ -91,14 +91,14 @@ def tasks_menu(task_manager: TaskManager, option: int):
             console.print("[bold blue]Updating a task![/bold blue]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to update!")
-            console.print(create_table("tasks", task_manager.tasks))
+            console.print(create_table("Tasks", task_manager.tasks))
             task = task_manager.tasks[int(Prompt.ask("Select an task to update", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1]
             task_manager.update_task(task, update_task(task))
         case 3:
             console.print("[bold red]Deleting a task![/bold red]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to delete!")
-            console.print(create_table("tasks", task_manager.tasks))
+            console.print(create_table("Tasks", task_manager.tasks))
             choice = int(Prompt.ask("Select an task to delete (To abort input nothing!)", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
             if choice == -1:
                 raise ValueError("aborting...")
@@ -145,7 +145,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 tasks = task_manager.tasks
 
             if tasks != []:
-                console.print(create_table("tasks", tasks))
+                console.print(create_table("Tasks", tasks))
             else:
                 console.print("[bold violet]No tasks found![/bold violet]")
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
