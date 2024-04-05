@@ -83,6 +83,7 @@ def sort_filter_options():
         return sort_by, filter_by
 
 def tasks_menu(task_manager: TaskManager, option: int):
+    console.clear()
     match option:
         case 1:
             console.print("[bold green]Creating a task![/bold green]")
@@ -110,7 +111,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="Skip")
 
             if category == "Sort":
-                sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
+                sort_by = Prompt.ask("Sort by", choices=["due_date", "create_date", "priority"], default="priority")
                 reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
                 tasks = task_manager.compare(task_manager.tasks, sort_by=sort_by, reversed=reverse)
                 

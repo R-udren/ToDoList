@@ -56,7 +56,6 @@ def menu(menu=True, email=None,
 
     if menu and email:
         from ui.tasks_ui import options_menu
-        console.clear()
         options_menu(email)
 
     elif email:
