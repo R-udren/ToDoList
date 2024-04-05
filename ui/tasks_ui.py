@@ -104,9 +104,9 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 raise ValueError("aborting...")
             task_manager.delete_task(task_manager.tasks[choice])
         case 4:
+            console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
-            console.print("[bold yellow]Listing all tasks![/bold yellow]")
             category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="Skip")
 
             if category == "Sort":

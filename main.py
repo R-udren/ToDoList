@@ -20,8 +20,6 @@ def main():
     if any([args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]):
         args.menu = False
 
-    print(args._get_args())
-
     arguments = [args.menu, args.email, args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]
     menu(*arguments)
 

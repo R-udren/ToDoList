@@ -49,7 +49,7 @@ class Task:
             tasks.sort(key=attrgetter(sort_by), reverse=reversed)
 
         return tasks
-    
+
     @staticmethod
     def search(tasks: list, filter_by: dict):
         """ 

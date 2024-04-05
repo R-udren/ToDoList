@@ -21,7 +21,8 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
         table.add_column("Create Date", style="blue")
 
         for i, option in enumerate(commands, 1):
-            table.add_row(str(i), *option.pretty_tuple())
+            task_params = option.pretty_tuple()
+            table.add_row(str(i), *task_params)
         return table
 
     elif isinstance(commands[0], User):  # Create user table
@@ -43,7 +44,7 @@ def menu(menu=True, email=None,
     from ui.login_ui import login_menu
     while True:
         try:
-            email = login_menu(email if email else None)
+            email = login_menu(email)
             break
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
@@ -53,15 +54,17 @@ def menu(menu=True, email=None,
 
     if menu and email:
         from ui.tasks_ui import options_menu
+        console.clear()
         options_menu(email)
 
-
+    elif email:
         from ui.tasks_ui import tasks_menu
         option = {add_task: 1, update_task: 2, delete_task: 3, list_tasks: 4, export_tasks: 5, import_tasks: 6}.get(True, 0)
         try:
-            console.clear()
             tasks_menu(TaskManager(email), option)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
         except KeyboardInterrupt:
             console.print("[bold yellow]Exiting...[/bold yellow]")
+    else:
+        console.print("[bold red]No options selected![/bold red]")
