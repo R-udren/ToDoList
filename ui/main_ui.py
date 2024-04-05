@@ -21,9 +21,9 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
         table.add_column("Create Date", style="blue")
 
         for i, option in enumerate(commands, 1):
-            task_params = option.pretty_tuple()
+            task_params = list(option.pretty_tuple())
             task_params[1] = f"[green]{task_params[1]}[/green]" if task_params[1] == "True" else f"[red]{task_params[1]}[/red]"
-            task_params[3] = f"[red bold]{task_params[3]}[/red bold]" if task_params[3] == "High" else f"[blue]{task_params[3]}[/blue]"
+            task_params[3] = f"[red bold]{task_params[3]}[/red bold]" if task_params[3] == "High" else f"[cyan]{task_params[3]}[/cyan]"
             table.add_row(str(i), *task_params)
         return table
 
