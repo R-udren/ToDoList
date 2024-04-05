@@ -52,21 +52,23 @@ class TaskManager:
 
     def export_tasks(self, csv_name: str=CSV_NAME):
         with open(csv_name, 'w') as file:
+            file.write('description,complete,due_date,priority,create_date\n')
             for task in self.tasks:
                 file.write(task.csv() + '\n')
     
     def import_tasks(self, csv_name: str=CSV_NAME):
         with open(csv_name, 'r') as file:
             for line in file:
-                task = line.strip().split(',')
-                task[1] = task[1] == 'True'	# Convert complete to boolean
-                task[2] = datetime.strptime(task[2], TIME_FORMAT).timestamp() # Convert due_date to timestamp
-                task[4] = datetime.strptime(task[4], TIME_FORMAT).timestamp() # Convert create_date to timestamp
-                if not self.task_exists(task[4]):
-                    ttask = Task(self.email, task[0], task[1], task[2], task[3], task[4])
-                    self.tasks.append(ttask)
-                    
-                    self.db.add_record('tasks', list(ttask))
+                if line.startswith('description') and line.endswith('create_date\n'):
+                    continue
+                _task = line.strip().split(',')
+                _task[1] = _task[1] == 'True'
+                _task[2] = datetime.strptime(_task[2], TIME_FORMAT).timestamp()
+                _task[4] = datetime.strptime(_task[4], TIME_FORMAT).timestamp()
+                if not self.task_exists(_task[4]):
+                    task = Task(self.email, *_task)
+                    self.tasks.append(task)
+                    self.db.add_record('tasks', list(task))
 
     def task_exists(self, create_date):
         for task in self.tasks:
