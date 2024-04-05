@@ -112,7 +112,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             if category == "Sort":
                 sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
                 reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
-                tasks = task_manager.sort_tasks(task_manager.tasks, sort_by=sort_by, reversed=reverse)
+                tasks = task_manager.compare(task_manager.tasks, sort_by=sort_by, reversed=reverse)
                 
             elif category == "Filter":
                 category = Prompt.ask("Sort or search", choices=["Complete", "Priority", "Due date", "Create date"])
@@ -140,7 +140,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
                         filter_by = {
                             "create_date": date_option + " " + str(time)
                         }
-                tasks = task_manager.search_tasks(task_manager.tasks, filter_by)
+                tasks = task_manager.search(task_manager.tasks, filter_by)
             else:
                 tasks = task_manager.tasks
 

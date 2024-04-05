@@ -1,7 +1,9 @@
+from datetime import datetime
+from operator import attrgetter
+
 from database.database_manager import DatabaseManager
 from tasks.task import Task
-from datetime import datetime
-
+from tasks.priority import Priority
 from config import DB_NAME, CSV_NAME, TIME_FORMAT
 
 class TaskManager:
@@ -70,8 +72,62 @@ class TaskManager:
                     self.tasks.append(task)
                     self.db.add_record('tasks', list(task))
 
-    def task_exists(self, create_date):
-        for task in self.tasks:
-            if task.create_date == create_date:
+    def task_exists(self, task: Task):
+        for _task in self.tasks:
+            if _task == task:
                 return True
         return False
+    
+    @staticmethod
+    def compare(tasks: list, sort_by: str, reversed: bool):
+        """
+        Compare tasks by sort_by
+        :param tasks: list of tasks to compare
+        :param sort_by: attribute to sort by (due_date, create_date, priority)
+        :param reverse: reverse sort order
+        :return: list of tasks
+        """
+        # Sort tasks
+        if sort_by in ["due_date", "create_date", "priority"]:
+            tasks.sort(key=attrgetter(sort_by), reverse=reversed)
+
+        return tasks
+
+    @staticmethod
+    def search(tasks: list, filter_by: dict):
+        """ 
+        Compare tasks by filter_by
+        :param tasks: list of tasks to compare
+        :param filter_by: dictionary of attributes to filter by (complete, priority, due_date, create_date)
+        :return: list of tasks
+        """
+        # Filter tasks
+        for key, value in filter_by.items():
+            if key == "complete":
+                tasks = [task for task in tasks if task.complete == value]
+            elif key == "priority":
+                value = Priority(value)
+                tasks = [task for task in tasks if task.priority == value]
+            elif key == "due_date" or key == "create_date":
+                value = TaskManager.timestamp(value)
+                t1 = value + 86400 * 2
+                t2 = value - 86400 * 2
+                tasks = [task for task in tasks if t2 < task.due_date < t1]
+                return tasks
+                
+                
+        return tasks
+    
+    @staticmethod
+    def timestamp(optionandvalue : str):
+        timeamount = optionandvalue.split(" ")
+        match timeamount[0]:
+            case "Days":
+                value = datetime.now().timestamp() + 86400 * int(timeamount[1])
+            case "Weeks":
+                value = datetime.now().timestamp() + 604800 * int(timeamount[1])
+            case "Months":
+                value = datetime.now().timestamp() + 2629746 * int(timeamount[1])
+            case "Years":
+                value = datetime.now().timestamp() + 31556952 * int(timeamount[1])
+        return value
