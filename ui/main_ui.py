@@ -20,7 +20,7 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
         table.add_column("Priority", style="red")
         table.add_column("Create Date", style="blue")
 
-        for i, option in enumerate(commands):
+        for i, option in enumerate(commands, 1):
             table.add_row(str(i), *option.pretty_tuple())
         return table
 
