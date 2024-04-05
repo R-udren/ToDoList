@@ -80,17 +80,5 @@ class Task:
         return tasks
     
     @staticmethod
-    def timestamp(optionandvalue : str):
-        timeamount = optionandvalue.split(" ")
-        match timeamount[0]:
-            case "Days":
-                value = datetime.now().timestamp() + 86400 * int(timeamount[1])
-            case "Weeks":
-                value = datetime.now().timestamp() + 604800 * int(timeamount[1])
-            case "Months":
-                value = datetime.now().timestamp() + 2629746 * int(timeamount[1])
-            case "Years":
-                value = datetime.now().timestamp() + 31556952 * int(timeamount[1])
-        return value
-
-
+    def timestamp(option_value : str):
+        return datetime.strptime(option_value, TIME_FORMAT).timestamp()
