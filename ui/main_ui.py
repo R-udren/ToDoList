@@ -10,7 +10,7 @@ from tasks.task import Task
 console = Console()
 
 
-def create_table(name : str, commands : list[Union[str, Task, User]]):
+def create_table(name : str, commands: list[Union[str, Task, User]]):
     table = Table(title=name, title_style="bold blue", show_lines=True)
     table.add_column("Nr", style="cyan", justify="center")
     if isinstance(commands[0], Task):  # Create Task table
@@ -20,7 +20,7 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
         table.add_column("Priority", style="red")
         table.add_column("Create Date", style="blue")
 
-        for i, option in enumerate(commands, 1):
+        for i, option in enumerate(commands):
             table.add_row(str(i), *option.pretty_tuple())
         return table
 
@@ -39,7 +39,7 @@ def create_table(name : str, commands : list[Union[str, Task, User]]):
         return table
 
 def menu(menu: bool = True, email=None,
-         list_tasks: bool = False, add_task: bool = False, update_task: bool = False, delete_task: bool = False, export_tasks: bool = False):
+         list_tasks: bool = False, add_task: bool = False, update_task: bool = False, delete_task: bool = False, export_tasks: bool = False, import_tasks: bool = False):
     from ui.login_ui import login_menu
     while True:
         try:
@@ -57,7 +57,7 @@ def menu(menu: bool = True, email=None,
 
 
         from ui.tasks_ui import tasks_menu
-        option = {add_task: 1, update_task: 2, delete_task: 3, list_tasks: 4, export_tasks: 5}.get(True, 6)
+        option = {add_task: 1, update_task: 2, delete_task: 3, list_tasks: 4, export_tasks: 5, import_tasks: 6}.get(True, 0)
         try:
             console.clear()
             tasks_menu(TaskManager(email), option)

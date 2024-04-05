@@ -153,7 +153,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
             task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
         case 6:
             task_manager.import_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
-        case 7:
+        case 0:
             raise KeyboardInterrupt("Exiting...")
 
 def options_menu(user_email : str):
@@ -164,7 +164,7 @@ def options_menu(user_email : str):
         console.clear()
         console.print(create_table("Commands", task_manager.commands))
         try:
-            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(TaskManager.commands) + 1)]))
+            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(0, len(TaskManager.commands) + 1)]))
             console.clear()
             tasks_menu(task_manager, option)
         except Exception as e:

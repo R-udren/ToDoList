@@ -22,8 +22,8 @@ def login_menu(user_email=None, password_attempts=PASSWORD_ATTEMPTS):
             attempts += 1
         console.print("[bold red]Too many attempts![/bold red]")
 
-    console.print(create_table("Actions", UserManager.options))
 
+    console.print(create_table("Actions", UserManager.options))
     option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
     time.sleep(0.2)
     console.clear()

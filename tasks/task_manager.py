@@ -6,13 +6,13 @@ from config import DB_NAME, CSV_NAME, TIME_FORMAT
 
 class TaskManager:
     commands = [
+        "Exit",
         "Create a task",
         "Update a task",
         "Delete a task",
         "List all tasks",
         "Export to CSV",
-        "Import from CSV",
-        "Exit"
+        "Import from CSV"
     ]
 
     def __init__(self, email : str):
