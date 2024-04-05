@@ -34,12 +34,12 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
     else:  # Create actions table
         table.add_column("Description", style="magenta")
 
-        for i, option in enumerate(commands, 1):
+        for i, option in enumerate(commands):
             table.add_row(str(i), option)
         return table
 
-def menu(menu: bool = True, email=None,
-         list_tasks: bool = False, add_task: bool = False, update_task: bool = False, delete_task: bool = False, export_tasks: bool = False, import_tasks: bool = False):
+def menu(menu=True, email=None,
+         list_tasks=False, add_task=False, update_task=False, delete_task=False, export_tasks=False, import_tasks=False):
     from ui.login_ui import login_menu
     while True:
         try:

@@ -8,9 +8,9 @@ class UserManager:
         self.db.create_user_table("users", ["username TEXT", "email TEXT PRIMARY KEY", "password TEXT"])
 
     options = [
+        "Exit",
         "Log in",
-        "Create an account",
-        "Exit"
+        "Create an account"
     ]
 
     def login(self, email, password) -> str:

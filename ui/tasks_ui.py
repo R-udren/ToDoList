@@ -164,7 +164,7 @@ def options_menu(user_email : str):
         console.clear()
         console.print(create_table("Commands", task_manager.commands))
         try:
-            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(0, len(TaskManager.commands) + 1)]))
+            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(len(TaskManager.commands))]))
             console.clear()
             tasks_menu(task_manager, option)
         except Exception as e:

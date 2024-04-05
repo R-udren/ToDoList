@@ -24,7 +24,7 @@ def login_menu(user_email=None, password_attempts=PASSWORD_ATTEMPTS):
 
 
     console.print(create_table("Actions", UserManager.options))
-    option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(1, len(UserManager.options) + 1)]))
+    option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(len(UserManager.options))]))
     time.sleep(0.2)
     console.clear()
     try:
@@ -41,7 +41,7 @@ def login_menu(user_email=None, password_attempts=PASSWORD_ATTEMPTS):
             case 2:
                 console.print("[bold blue]Creating an account![/bold blue]")
                 return user_manager.save_user(Prompt.ask("Username"), Prompt.ask("Email"), Prompt.ask("Password", password=True))
-            case 3:
+            case 0:
                 raise KeyboardInterrupt("Exiting...")
     except Exception as e:
         console.print(f"[bold red]Error: {e}[/bold red]")
