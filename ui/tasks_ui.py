@@ -83,36 +83,22 @@ def sort_filter_options():
         return sort_by, filter_by
 
 def tasks_menu(task_manager: TaskManager, option: int):
+    console.clear()
     match option:
         case 1:
-            console.print("[bold green]Creating a task![/bold green]")
-            task_manager.create_task(fill_task(task_manager.email))
+            console.print(create_table("Actions", TaskManager.commandsM))
+            option = Prompt.ask("Select an option", choices=[str(i) for i in range(len(TaskManager.commandsM))])
+            task_manager_menu(task_manager, int(option))
         case 2:
-            console.print("[bold blue]Updating a task![/bold blue]")
-            if task_manager.tasks == []:
-                raise Exception("No tasks to update!")
-            console.print(create_table("Tasks", task_manager.tasks))
-            task = task_manager.tasks[int(Prompt.ask("Select an task to update", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1]
-            task_manager.update_task(task, update_task(task))
-        case 3:
-            console.print("[bold red]Deleting a task![/bold red]")
-            if task_manager.tasks == []:
-                raise Exception("No tasks to delete!")
-            console.print(create_table("Tasks", task_manager.tasks))
-            choice = int(Prompt.ask("Select an task to delete (To abort input nothing!)", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
-            if choice == -1:
-                raise ValueError("aborting...")
-            task_manager.delete_task(task_manager.tasks[choice])
-        case 4:
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
             category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="Skip")
 
             if category == "Sort":
-                sort_by = Prompt.ask("Sort by", choices={"Due date" : "due_date", "Create date" : "create_date", "Priority" : "priority"}, default="priority")
+                sort_by = Prompt.ask("Sort by", choices=["due_date", "create_date", "priority"], default="priority")
                 reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
-                tasks = task_manager.sort_tasks(task_manager.tasks, sort_by=sort_by, reversed=reverse)
+                tasks = task_manager.compare(task_manager.tasks, sort_by=sort_by, reversed=reverse)
                 
             elif category == "Filter":
                 category = Prompt.ask("Sort or search", choices=["Complete", "Priority", "Due date", "Create date"])
@@ -140,7 +126,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
                         filter_by = {
                             "create_date": date_option + " " + str(time)
                         }
-                tasks = task_manager.search_tasks(task_manager.tasks, filter_by)
+                tasks = task_manager.search(task_manager.tasks, filter_by)
             else:
                 tasks = task_manager.tasks
 
@@ -149,12 +135,37 @@ def tasks_menu(task_manager: TaskManager, option: int):
             else:
                 console.print("[bold violet]No tasks found![/bold violet]")
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
-        case 5:
+        case 3:
             task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
-        case 6:
+        case 4:
             task_manager.import_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
         case 0:
             raise KeyboardInterrupt("Exiting...")
+        
+def task_manager_menu(task_manager : TaskManager, option : int):
+    console.clear()
+    match option:
+        case 1:
+            console.print("[bold green]Creating a task![/bold green]")
+            task_manager.create_task(fill_task(task_manager.email))
+        case 2:
+            console.print("[bold blue]Updating a task![/bold blue]")
+            if task_manager.tasks == []:
+                raise Exception("No tasks to update!")
+            console.print(create_table("Tasks", task_manager.tasks))
+            task = task_manager.tasks[int(Prompt.ask("Select an task to update", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)])) - 1]
+            task_manager.update_task(task, update_task(task))
+        case 3:
+            console.print("[bold red]Deleting a task![/bold red]")
+            if task_manager.tasks == []:
+                raise Exception("No tasks to delete!")
+            console.print(create_table("Tasks", task_manager.tasks))
+            choice = int(Prompt.ask("Select an task to delete (To abort input nothing!)", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
+            if choice == -1:
+                raise ValueError("aborting...")
+            task_manager.delete_task(task_manager.tasks[choice])
+        case 0:
+            pass
 
 def options_menu(user_email : str):
     time.sleep(0.1)
@@ -162,9 +173,9 @@ def options_menu(user_email : str):
     task_manager = TaskManager(user_email)
     while True:
         console.clear()
-        console.print(create_table("Commands", task_manager.commands))
+        console.print(create_table("Commands", task_manager.commandsV))
         try:
-            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(len(TaskManager.commands))]))
+            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(len(TaskManager.commandsV))]))
             console.clear()
             tasks_menu(task_manager, option)
         except Exception as e:
