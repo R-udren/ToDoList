@@ -7,14 +7,19 @@ from tasks.priority import Priority
 from config import DB_NAME, CSV_NAME, TIME_FORMAT
 
 class TaskManager:
-    commands = [
+    commandsV = [
         "Exit",
-        "Create a task",
-        "Update a task",
-        "Delete a task",
+        "Manage tasks",
         "List all tasks",
         "Export to CSV",
         "Import from CSV"
+    ]
+
+    commandsM = [
+        "Exit",
+        "Create a task",
+        "Update a task",
+        "Delete a task"
     ]
 
     def __init__(self, email : str):
@@ -93,6 +98,8 @@ class TaskManager:
         Compare tasks by filter_by
         :param tasks: list of tasks to compare
         :param filter_by: dictionary of attributes to filter by (complete, priority, due_date, create_date)
+        :param value: float of current time + time amount
+        :param t1, t2: upper and lower bounds of time
         :return: list of tasks
         """
         # Filter tasks
