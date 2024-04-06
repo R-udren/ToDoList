@@ -19,7 +19,8 @@ class TaskManager:
         "Exit",
         "Create a task",
         "Update a task",
-        "Delete a task"
+        "Delete a task",
+        "Mark task as complete"
     ]
 
     def __init__(self, email : str):
@@ -37,6 +38,14 @@ class TaskManager:
         for (i, task) in enumerate(self.tasks):
             if task == old_task:
                 self.tasks[i] = new_task
+                self.db.clear_table('tasks', self.email)
+                self.save_to_db()
+                break
+    
+    def mark_complete(self, task: Task):
+        for (i, _task) in enumerate(self.tasks):
+            if _task == task:
+                self.tasks[i].complete = True
                 self.db.clear_table('tasks', self.email)
                 self.save_to_db()
                 break
