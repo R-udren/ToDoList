@@ -43,10 +43,11 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
 
 def menu(menu=True, email=None,
          list_tasks=False, add_task=False, update_task=False, delete_task=False, export_tasks=False, import_tasks=False):
+    active_email = None
     from ui.login_ui import login_menu
     while True:
         try:
-            email = login_menu(email)
+            active_email = login_menu(email)
             break
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
@@ -54,12 +55,12 @@ def menu(menu=True, email=None,
             console.print("[bold yellow]Exiting...[/bold yellow]")
             break
 
-    if menu and email:
+    if menu and active_email:
         from ui.tasks_ui import options_menu
         console.clear()
-        options_menu(email)
+        options_menu(active_email)
 
-    elif email:
+    elif active_email:
         from ui.tasks_ui import tasks_menu
         option = {add_task: 1, update_task: 2, delete_task: 3, list_tasks: 4, export_tasks: 5, import_tasks: 6}.get(True, 0)
         try:
