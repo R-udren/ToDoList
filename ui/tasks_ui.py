@@ -83,7 +83,6 @@ def sort_filter_options():
         return sort_by, filter_by
 
 def tasks_menu(task_manager: TaskManager, option: int):
-    console.clear()
     match option:
         case 1:
             console.print(create_table("Actions", TaskManager.commandsM))
@@ -166,6 +165,7 @@ def task_manager_menu(task_manager : TaskManager, option : int):
             task_manager.delete_task(task_manager.tasks[choice])
         case 0:
             pass
+    console.clear()
 
 def options_menu(user_email : str):
     time.sleep(0.1)
