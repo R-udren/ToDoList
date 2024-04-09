@@ -48,11 +48,12 @@ def menu(menu=True, email=None,
     while True:
         try:
             active_email = login_menu(email)
-            break
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
         except KeyboardInterrupt:
             console.print("[bold yellow]Exiting...[/bold yellow]")
+            exit()
+        finally:
             break
 
     if menu and active_email:
