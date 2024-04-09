@@ -17,10 +17,10 @@ def main():
     parser.add_argument("--import-tasks", action="store_true", help="Import tasks from a CSV file")
 
     args = parser.parse_args()
-    if any([args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]):
+    arguments = [args.menu, args.email, args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]
+    if any(arguments):
         args.menu = False
 
-    arguments = [args.menu, args.email, args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]
     menu(*arguments)
 
 if __name__ == "__main__":
