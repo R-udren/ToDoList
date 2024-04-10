@@ -20,22 +20,38 @@ class User:
         return username
 
     @staticmethod
-    def validate_email(email, db):
+    def is_email_correct(email):
         email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         if not re.fullmatch(email_regex, email):
-            raise ValueError("Invalid email address")
+            return False
+        return True
+
+    @staticmethod
+    def is_password_correct(password):
+        if len(password) < 8:
+            return False
+        if not re.match(r"^[A-Za-z0-9@#$%^&+=]*$", password):
+            return False
+        return True
+
+    @staticmethod
+    def validate_email(email, db):
+        if not email:
+            raise ValueError("Email cannot be empty")
+        if not User.is_email_correct(email):
+            raise ValueError("Email is not valid")
         if db.email_exists(email):
             raise ValueError("Email already exists")
         return email
 
     @staticmethod
     def validate_password(password):
-        if len(password) < 8:
-            raise ValueError("Password must be at least 8 characters long")
-        if not re.match(r"^[A-Za-z0-9@#$%^&+=]*$", password):
-            raise ValueError("Password can only contain letters, numbers, and @#$%^&+=")
+        if password is None:
+            raise ValueError("Password cannot be empty")
+        if not User.is_password_correct(password):
+            raise ValueError("Password is not valid")
         return password
-
+    
     @staticmethod
     def hash_password(password):
         """Hash a password for storing."""
