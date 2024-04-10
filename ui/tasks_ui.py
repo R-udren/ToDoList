@@ -135,9 +135,19 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 console.print("[bold violet]No tasks found![/bold violet]")
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 3:
-            task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+            try:
+                task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+            except Exception as e:
+                console.print(f"[bold red]{e}[/bold red]")
+            except KeyboardInterrupt:
+                console.print("\n[bold yellow]Aborting...[/bold yellow]")
         case 4:
-            task_manager.import_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+            try:
+                task_manager.import_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+            except Exception as e:
+                console.print(f"[bold red]{e}[/bold red]")
+            except KeyboardInterrupt:
+                console.print("\n[bold yellow]Aborting...[/bold yellow]")
         case 0:
             raise KeyboardInterrupt("Exiting...")
         
