@@ -53,5 +53,10 @@ class DatabaseManager:
         self.cursor.execute(f'INSERT INTO {table_name} VALUES (?, ?, ?)', (username, email, password))
         self.db.commit()
 
+    def delete_user(self, email):
+        self.cursor.execute('DELETE FROM tasks WHERE email = ?', (email,))
+        self.cursor.execute('DELETE FROM users WHERE email = ?', (email,))
+        self.db.commit()
+
     def close(self):
         self.db.close()

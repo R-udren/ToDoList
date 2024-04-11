@@ -54,7 +54,10 @@ def menu(menu=True, email=None,
             console.print("[bold yellow]Exiting...[/bold yellow]")
             exit()
         finally:
-            break
+            if active_email is None:
+                continue
+            else:
+                break
 
     if menu and active_email:
         from ui.tasks_ui import options_menu

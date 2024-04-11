@@ -10,7 +10,8 @@ class UserManager:
     options = [
         "Exit",
         "Log in",
-        "Create an account"
+        "Create an account",
+        "Delete an account"
     ]
 
     def login(self, email, password) -> str:
@@ -39,6 +40,14 @@ class UserManager:
         password = User.hash_password(User.validate_password(password))
         self.db.add_user('users', username, email, password)
         return email
+    
+    def delete_user(self, email):
+        """
+        Delete a user from the database
+        :param email: str: email of the user
+        """
+        self.db.delete_user(email)
+        return None
 
     @staticmethod
     def exit():

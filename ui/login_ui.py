@@ -28,22 +28,27 @@ def login_cli(user_email, password_attempts):
     console.print("[bold red]Too many attempts![/bold red]")
 
 def login_ui():
+    console.clear()
     console.print(create_table("Actions", UserManager.options))
     option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(len(UserManager.options))]))
     console.clear()
     try:
         match option:
             case 1:
+                console.print("[bold green]Logging in![/bold green]")
                 return login_option()
             case 2:
+                console.print("[bold blue]Creating an account![/bold blue]")
                 return create_account_option()
+            case 3:
+                console.print("[bold red]Deleting an account![/bold red]")
+                return user_manager.delete_user(login_option())
             case 0:
                 raise KeyboardInterrupt("Exiting...")
     except Exception as e:
         console.print(f"[bold red]Error: {e}[/bold red]")
 
 def login_option():
-    console.print("[bold green]Logging in![/bold green]")
     user_email = Prompt.ask("Email")
     for attempt in range(PASSWORD_ATTEMPTS):
         password = Prompt.ask("Password", password=True)
@@ -53,7 +58,6 @@ def login_option():
             console.print(f"[bold red]{ve}, attempts remaining {PASSWORD_ATTEMPTS-attempt-1}[/bold red]")
 
 def create_account_option():
-    console.print("[bold blue]Creating an account![/bold blue]")
     username = Prompt.ask("Username")
     while True:
         email = Prompt.ask("Email")
