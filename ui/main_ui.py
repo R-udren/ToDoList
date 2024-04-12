@@ -45,11 +45,18 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
 def menu(menu=True, email=None,
          list_tasks=False, add_task=False, update_task=False, delete_task=False, export_tasks=False, import_tasks=False):
     active_email = None
-    try:
-        active_email = initial_menu(active_email, email)
-    except KeyboardInterrupt:
+    
+    from ui.login_ui import login_menu
+    while True:
+        try:
+            active_email = login_menu(email)
+            break
+        except KeyboardInterrupt:
             console.print("[bold yellow]Exiting...[/bold yellow]")
             exit()
+        except Exception as e:
+            console.print(f"[bold red]{e}[/bold red]")
+    
 
     if menu and active_email:
         from ui.tasks_ui import options_menu
@@ -74,14 +81,5 @@ def menu(menu=True, email=None,
     else:
         console.print("[bold red]No options selected![/bold red]")
 
-def initial_menu(active_email, email):
-    from ui.login_ui import login_menu
-    while True:
-        try:
-            active_email = login_menu(email)
-            return active_email
-        except KeyboardInterrupt:
-            raise KeyboardInterrupt("Exiting...")
-        except Exception as e:
-            console.print(f"[bold red]{e}[/bold red]")
+
                 
