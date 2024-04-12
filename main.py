@@ -20,8 +20,9 @@ def main():
     arguments = [args.menu, args.email, args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]
     if any(arguments):
         args.menu = False
+    while True:
+        menu(*arguments)
 
-    menu(*arguments)
 
 if __name__ == "__main__":
     main()

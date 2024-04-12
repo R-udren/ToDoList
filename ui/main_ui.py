@@ -1,4 +1,5 @@
 from typing import Union
+from time import sleep
 
 from rich.console import Console
 from rich.table import Table
@@ -44,25 +45,20 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
 def menu(menu=True, email=None,
          list_tasks=False, add_task=False, update_task=False, delete_task=False, export_tasks=False, import_tasks=False):
     active_email = None
-    from ui.login_ui import login_menu
-    while True:
-        try:
-            active_email = login_menu(email)
-        except Exception as e:
-            console.print(f"[bold red]{e}[/bold red]")
-        except KeyboardInterrupt:
+    try:
+        active_email = initial_menu(active_email, email)
+    except KeyboardInterrupt:
             console.print("[bold yellow]Exiting...[/bold yellow]")
             exit()
-        finally:
-            if active_email is None:
-                continue
-            else:
-                break
 
     if menu and active_email:
         from ui.tasks_ui import options_menu
         console.clear()
-        options_menu(active_email)
+        try:
+            options_menu(active_email)
+        except KeyboardInterrupt:
+            console.print("[bold yellow]Logging out...[/bold yellow]")
+            sleep(1)
 
     elif active_email:
         from ui.tasks_ui import tasks_menu
@@ -72,6 +68,20 @@ def menu(menu=True, email=None,
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
         except KeyboardInterrupt:
-            console.print("[bold yellow]Exiting...[/bold yellow]")
+            console.print("[bold yellow]Logging out...[/bold yellow]")
+            sleep(1)
+            
     else:
         console.print("[bold red]No options selected![/bold red]")
+
+def initial_menu(active_email, email):
+    from ui.login_ui import login_menu
+    while True:
+        try:
+            active_email = login_menu(email)
+            return active_email
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt("Exiting...")
+        except Exception as e:
+            console.print(f"[bold red]{e}[/bold red]")
+                

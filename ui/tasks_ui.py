@@ -200,6 +200,3 @@ def options_menu(user_email : str):
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
             time.sleep(1)
-        except KeyboardInterrupt:
-            console.print("\n[bold yellow]Logging out![/bold yellow]")
-            break
