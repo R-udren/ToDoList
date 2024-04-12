@@ -46,7 +46,8 @@ class UserManager:
         Delete a user from the database
         :param email: str: email of the user
         """
-        self.db.delete_user(email)
+        self.db.clear_table('tasks', email)
+        self.db.clear_table('users', email)
         return None
 
     @staticmethod
