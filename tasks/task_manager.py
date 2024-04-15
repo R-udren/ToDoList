@@ -61,13 +61,13 @@ class TaskManager:
             self.db.add_record('tasks', list(task))
 
     def export_tasks(self, csv_name: str=CSV_NAME):
-        with open("/workspaces/ToDoList/csv/" + csv_name, 'w') as file:
+        with open("./csv/" + csv_name, 'w') as file:
             file.write('description,complete,due_date,priority,create_date\n')
             for task in self.tasks:
                 file.write(task.csv() + '\n')
     
     def import_tasks(self, csv_name: str=CSV_NAME):
-        with open("/workspaces/ToDoList/csv/" + csv_name, 'r') as file:
+        with open("./csv/" + csv_name, 'r') as file:
             for line in file:
                 if line.startswith('description') and line.endswith('create_date\n'):
                     continue
