@@ -35,4 +35,4 @@ class Task:
         return ','.join(self.pretty_tuple())
 
     def __eq__(self, other):
-        return self.description == other.description and self.create_date == other.create_date
+        return self.description == other.description or self.create_date == other.create_date
