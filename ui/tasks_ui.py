@@ -169,17 +169,17 @@ def task_manager_menu(task_manager : TaskManager, option : int):
             if task_manager.tasks == []:
                 raise Exception("No tasks to delete!")
             console.print(create_table("Tasks", task_manager.tasks))
-            choice = int(Prompt.ask("Select an task to delete (To abort input nothing!)", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
+            choice = int(Prompt.ask("Select an task to delete [gray](To abort input nothing!)[/gray]", choices=[str(i) for i in range(1, len(task_manager.tasks) + 1)], default=0)) - 1
             if choice == -1:
                 raise ValueError("aborting...")
             task_manager.delete_task(task_manager.tasks[choice])
         case 4:
             console.print("[bold yellow]Marking a task as complete![/bold yellow]")
-            if task_manager.tasks == []:
-                raise Exception("No tasks to mark as complete!")
             tasks = task_manager.search(task_manager.tasks, {"complete": False})
+            if task_manager.tasks == [] or tasks == []:
+                raise Exception("No tasks to mark as complete!")
             console.print(create_table("Tasks", tasks))
-            choice = int(Prompt.ask("Select an task to mark as complete (To abort input nothing!)", choices=[str(i) for i in range(1, len(tasks) + 1)], default=0)) - 1
+            choice = int(Prompt.ask("Select an task to mark as complete [gray](To abort input nothing!)[/gray]", choices=[str(i) for i in range(1, len(tasks) + 1)], default=0)) - 1
             if choice != -1:
                 task_manager.mark_complete(tasks[choice])
         case 0:
