@@ -1,14 +1,17 @@
-import unittest
 from datetime import datetime
+
+import unittest
+
 from tasks.priority import Priority
 from tasks.task import Task
 from users.user import User
+from config import TIME_FORMAT
 
 class TestTask(unittest.TestCase):
     def setUp(self):
-        self.date = datetime.now().timestamp()
-        self.just_task = Task("test@example.com", "Test task", True, self.date, Priority("High"), self.date)
-        self.other_task = Task("not_email", "", False, self.date, Priority("Medium"), self.date)
+        self.date = datetime.now()
+        self.just_task = Task("test@example.com", "Test task", True, self.date, Priority("High"), self.date.strftime(TIME_FORMAT))
+        self.other_task = Task("not_email", "", False, self.date.timestamp(), Priority("Medium"), self.date)
 
     def test_init(self):
         self.verify_task(self.just_task, "test@example.com", "Test task", True, "High")
@@ -35,6 +38,11 @@ class TestTask(unittest.TestCase):
         self.just_task.mark_complete()
         self.assertTrue(self.just_task.complete)
 
+
+    def test_times(self):
+        self.assertEqual(self.just_task.create_date, datetime.strptime(self.date.strftime(TIME_FORMAT), TIME_FORMAT))
+        self.assertEqual(self.just_task.due_date, datetime.fromtimestamp(self.date.timestamp()))
+        self.assertEqual(self.just_task.due_date.strftime(TIME_FORMAT), self.date.strftime(TIME_FORMAT))
 
 class TestPriority(unittest.TestCase):
     def setUp(self):
