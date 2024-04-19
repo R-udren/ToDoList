@@ -2,6 +2,7 @@ from datetime import datetime
 from operator import attrgetter
 
 from database.database_manager import DatabaseManager
+from database.csv_manager import CSVManager
 from tasks.task import Task
 from tasks.priority import Priority
 from config import DB_NAME, CSV_NAME, TIME_FORMAT
@@ -61,24 +62,19 @@ class TaskManager:
             self.db.add_record('tasks', list(task))
 
     def export_tasks(self, csv_name: str=CSV_NAME):
-        with open("./csv/" + csv_name, 'w') as file:
-            file.write('description,complete,due_date,priority,create_date\n')
-            for task in self.tasks:
-                file.write(task.csv() + '\n')
-    
+        header = "description,complete,due_date,priority,create_date"
+        data = [task.csv() for task in self.tasks]
+        written_rows = CSVManager.export_csv(data, header, csv_name)
+        return written_rows
+
     def import_tasks(self, csv_name: str=CSV_NAME):
-        with open("./csv/" + csv_name, 'r') as file:
-            for line in file:
-                if line.startswith('description') and line.endswith('create_date\n'):
-                    continue
-                _task = line.strip().split(',')
-                _task[1] = _task[1] == 'True'
-                _task[2] = datetime.strptime(_task[2], TIME_FORMAT).timestamp()
-                _task[4] = datetime.strptime(_task[4], TIME_FORMAT).timestamp()
-                task = Task(self.email, *_task)
-                if not self.task_exists(task):
-                    self.tasks.append(task)
-                    self.db.add_record('tasks', list(task))
+        header = "description,complete,due_date,priority,create_date"
+        data = CSVManager.import_csv(header, csv_name)
+        for row in data:
+            if not self.task_exists(Task(*row)):
+                self.tasks.append(Task(*row))
+                self.db.add_record('tasks', row)
+        return len(self.data)
 
     def task_exists(self, task: Task):
         for _task in self.tasks:
