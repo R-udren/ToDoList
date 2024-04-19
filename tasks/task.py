@@ -3,30 +3,33 @@ from typing import Union
 
 
 from tasks.priority import Priority
+from tasks.helper import convert_to_datetime
 from config import TIME_FORMAT
 
 
 class Task:
     def __init__(self, email : str, description: str, complete: bool = False,
-                 due_date: datetime.timestamp = None, priority: Union[Priority, int, str] = Priority("Low"), create_date: int = None):
+                 due_date: datetime = datetime.now(),
+                 priority: Union[Priority, int, str] = Priority("Low"), create_date: datetime = datetime.now()):
         self.creator_email = email
         self.description = description
         self.complete = bool(complete)
-        self.due_date = due_date if due_date is not None else datetime.now().timestamp()
-        if isinstance(priority, Priority):
-            self.priority = priority
-        else:
-            self.priority = Priority(priority)
-        self.create_date = create_date if create_date is not None else datetime.now().timestamp()
+        self.due_date = convert_to_datetime(due_date)
+        self.priority = priority if isinstance(priority, Priority) else Priority(priority)
+        self.create_date = convert_to_datetime(create_date)
+
 
     def mark_complete(self):
         self.complete = True
 
     def pretty_tuple(self):
-        return self.description, str(bool(self.complete)), datetime.fromtimestamp(self.due_date).strftime(TIME_FORMAT), str(self.priority), datetime.fromtimestamp(self.create_date).strftime(TIME_FORMAT)
+        return self.description, str(bool(self.complete)), self.due_date.strftime(TIME_FORMAT), str(self.priority), self.create_date.strftime(TIME_FORMAT)
 
     def __str__(self):
         return " - ".join(self.pretty_tuple())
+
+    def __repr__(self):
+        return f"Task({','.join(tuple(self))})"
 
     def __iter__(self):
         return iter((self.creator_email, self.description, int(self.complete), self.due_date, int(self.priority), self.create_date))
