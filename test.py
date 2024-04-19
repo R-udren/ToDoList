@@ -2,6 +2,7 @@ import unittest
 from datetime import datetime
 from tasks.priority import Priority
 from tasks.task import Task
+from users.user import User
 
 class TestTask(unittest.TestCase):
     def setUp(self):
@@ -71,6 +72,36 @@ class TestPriority(unittest.TestCase):
         self.assertEqual(self.low, Priority("Low"))
         self.assertEqual(self.medium, Priority("Medium"))
         self.assertEqual(self.high, Priority("High"))
+
+class TestUser(unittest.TestCase):
+    def setUp(self):
+        self.just_user = User("temp", "temp@temp.lv", "password")
+        self.other_user = User("", "temptemp.lv", "temp")
+        self.hashed_password = User.hash_password("password")
+
+    def test_init(self):
+        self.assertEqual(self.just_user.username, "temp")
+        self.assertEqual(self.just_user.email, "temp@temp.lv")
+        self.assertEqual(self.just_user.password, "password")
+
+    def test_invalid_attributes(self):
+        with self.assertRaises(ValueError):
+            User.validate_username(self.other_user.username, None)
+        with self.assertRaises(ValueError):
+            User.validate_email(self.other_user.email, None)
+        with self.assertRaises(ValueError):
+            User.validate_password(self.other_user.password)
+        
+    def test_password(self):
+        self.assertTrue(User.is_password_correct("password"))
+        self.assertFalse(User.is_password_correct("pass"))
+        self.assertTrue(User.verify_password(self.hashed_password, "password"))
+
+    def test_email(self):
+        self.assertTrue(User.is_email_correct(self.just_user.email))
+        self.assertFalse(User.is_email_correct("temp"))
+    
+
 
 def start_tests():
     unittest.main()
