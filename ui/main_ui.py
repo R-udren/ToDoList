@@ -42,14 +42,14 @@ def create_table(name: str, commands: list[Union[str, Task, User]], start_from: 
             table.add_row(str(i), option)
         return table
 
-def menu(menu=True, email=None,
-         list_tasks=False, add_task=False, update_task=False, delete_task=False, export_tasks=False, import_tasks=False):
+def menu(menu=True, email=None, list_tasks=False, add_task=False,
+         update_task=False, delete_task=False, export_tasks=False, import_tasks=False):
     active_email = None
     
     from ui.login_ui import login_menu
     while True:
         try:
-            active_email = login_menu(email)
+            active_email = login_menu(email, cli=True)
             break
         except KeyboardInterrupt:
             console.print("[bold yellow]Exiting...[/bold yellow]")
@@ -69,7 +69,7 @@ def menu(menu=True, email=None,
 
     elif active_email:
         from ui.tasks_ui import tasks_menu
-        option = {add_task: 1, update_task: 2, delete_task: 3, list_tasks: 4, export_tasks: 5, import_tasks: 6}.get(True, 0)
+        option = {list_tasks: 1, add_task: 2, update_task: 3, delete_task: 4, export_tasks: 5, import_tasks: 6}
         try:
             tasks_menu(TaskManager(email), option)
         except Exception as e:

@@ -10,22 +10,11 @@ from config import PASSWORD_ATTEMPTS
 console = Console()
 user_manager = UserManager()
 
-def login_menu(user_email=None, password_attempts=PASSWORD_ATTEMPTS):
-    if user_email:  # If called from CLI
-        return login_cli(user_email, password_attempts)
+def login_menu(user_email=None, password_attempts=PASSWORD_ATTEMPTS, cli=False):
+    if cli:
+        return login_option(user_email)
     else:
         return login_ui()
-
-def login_cli(user_email, password_attempts):
-    attempts = 0
-    while password_attempts == -1 or attempts < password_attempts:
-        password = Prompt.ask("Password", password=True)
-        try:
-            return user_manager.login(user_email, password)
-        except ValueError as ve:
-            console.print(f"[bold red]{ve}[/bold red]")
-        attempts += 1
-    console.print("[bold red]Too many attempts![/bold red]")
 
 def login_ui():
     console.clear()
@@ -48,8 +37,8 @@ def login_ui():
     except Exception as e:
         console.print(f"[bold red]Error: {e}[/bold red]")
 
-def login_option():
-    user_email = Prompt.ask("Email")
+def login_option(user_email: str = None):
+    user_email = user_email or Prompt.ask("Email")
     for attempt in range(PASSWORD_ATTEMPTS):
         password = Prompt.ask("Password", password=True)
         try:
