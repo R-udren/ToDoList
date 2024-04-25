@@ -11,7 +11,7 @@ from tasks.task import Task
 console = Console()
 
 
-def create_table(name : str, commands: list[Union[str, Task, User]]):
+def create_table(name: str, commands: list[Union[str, Task, User]], start_from: int = 1) -> Table:
     table = Table(title=name, title_style="bold blue", show_lines=True)
     table.add_column("Nr", style="cyan", justify="center")
     if isinstance(commands[0], Task):  # Create Task table
@@ -21,7 +21,7 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
         table.add_column("Priority", style="red")
         table.add_column("Create Date", style="blue")
 
-        for i, option in enumerate(commands, 1):
+        for i, option in enumerate(commands, start_from):
             task_params = list(option.pretty_tuple())
             task_params[1] = f"[green]{task_params[1]}[/green]" if task_params[1] == "True" else f"[red]{task_params[1]}[/red]"
             task_params[3] = f"[red bold]{task_params[3]}[/red bold]" if task_params[3] == "High" else f"[cyan]{task_params[3]}[/cyan]"
@@ -32,13 +32,13 @@ def create_table(name : str, commands: list[Union[str, Task, User]]):
         table.add_column("Username", style="magenta")
         table.add_column("Email", style="magenta")
 
-        for i, option in enumerate(commands, 1):
+        for i, option in enumerate(commands, start_from):
             table.add_row(str(i), option.email, option.username)
         return table
     else:  # Create actions table
         table.add_column("Description", style="magenta")
 
-        for i, option in enumerate(commands):
+        for i, option in enumerate(commands, start_from - 1):
             table.add_row(str(i), option)
         return table
 

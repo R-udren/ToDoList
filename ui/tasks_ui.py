@@ -49,7 +49,7 @@ def update_task(task: Task):
     priority = Prompt.ask("Priority", choices=Priority.LEVELS.keys(), default=str(task.priority))
     return Task(task.creator_email, description, complete, due_date, priority, task.create_date)
 
-def fill_task(email : str):
+def fill_task(email: str):
     while True:
         try:
             description = Prompt.ask("Description")
@@ -71,6 +71,37 @@ def fill_task(email : str):
     except ValueError as ve:
         console.print(f"[bold red]{ve}[/bold red]")
 
+def filter_tasks(task_manager: TaskManager) -> list[Task]:
+    category = Prompt.ask("Filter by", choices=["Complete", "Priority", "Due date", "Create date"], default="Complete")
+    match category:
+        case "Complete":
+            filter_by = {
+                "complete": Prompt.ask("Complete", choices=["True", "False"], default="False") == "True"
+            }
+        case "Priority":
+            filter_by = {
+                "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="High")
+            }
+        case "Due date":
+            date_options = ["Days", "Weeks", "Months", "Years"]
+            date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
+            time = int(Prompt.ask(f"{date_option} to add", default="0", show_default=False))
+            filter_by = {
+                "due_date": date_option + " " + str(time)
+            }
+        case "Create date":
+            date_options = ["Days", "Weeks", "Months", "Years"]
+            date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
+            time = int(Prompt.ask(f"{date_option} to add", default="0", show_default=False))
+            filter_by = {
+                "create_date": date_option + " " + str(time)
+            }
+    return task_manager.search(task_manager.tasks, filter_by)
+
+def sort_tasks(task_manager: TaskManager):
+    sort_by = Prompt.ask("Sort by", choices=["due_date", "create_date", "priority"], default="priority")
+    reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
+    return task_manager.compare(task_manager.tasks, sort_by=sort_by, reversed=reverse)
 
 def sort_filter_options():
         sort_by = Prompt.ask("Sort by", choices={"due date" : "due_date", "create date" : "create_date", "priority" : "priority"})
@@ -92,40 +123,20 @@ def tasks_menu(task_manager: TaskManager, option: int):
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
             if task_manager.tasks == []:
                 raise Exception("No tasks to list!")
-            category = Prompt.ask("Sort or search", choices=["Sort", "Filter"], default="Skip")
+
+            sort_or_search = ["Sort", "Filter", "Both"]
+            console.print(create_table("Tasks", sort_or_search, start_from=2))  # TODO: Fix this
+            category = Prompt.ask("Sort or Filter", choices=[str(i) for i in range(1, len(sort_or_search) + 1)], default="Skip")
+            if category != "Skip":
+                category = sort_or_search[int(category) - 1]
 
             if category == "Sort":
-                sort_by = Prompt.ask("Sort by", choices=["due_date", "create_date", "priority"], default="priority")
-                reverse = Prompt.ask("What order should it be?", choices=["Ascending", "Descending"], default="Descending") == "Descending"
-                tasks = task_manager.compare(task_manager.tasks, sort_by=sort_by, reversed=reverse)
-                
+                tasks = sort_tasks(task_manager)
             elif category == "Filter":
-                category = Prompt.ask("Sort or search", choices=["Complete", "Priority", "Due date", "Create date"])
-                match category:
-                    case "Complete":
-                        filter_by = {
-                            "complete": Prompt.ask("Complete", choices=["True", "False"], default="False") == "True"
-                        }
-                    case "Priority":
-                        filter_by = {
-                            "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="High")
-                        }
-                    case "Due date":
-                        date_options = ["Days", "Weeks", "Months", "Years"]
-                        date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
-                        time = int(Prompt.ask("{0} to add".format(date_option), default="0", show_default=False))
-                        filter_by = {
-                            "due_date": date_option + " " + str(time)
-
-                        }
-                    case "Create date":
-                        date_options = ["Days", "Weeks", "Months", "Years"]
-                        date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
-                        time = int(Prompt.ask("{0} to add".format(date_option), default="0", show_default=False))
-                        filter_by = {
-                            "create_date": date_option + " " + str(time)
-                        }
-                tasks = task_manager.search(task_manager.tasks, filter_by)
+                tasks = filter_tasks(task_manager)
+            elif category == "Both":
+                tasks = filter_tasks(task_manager)
+                tasks = sort_tasks(task_manager)
             else:
                 tasks = task_manager.tasks
 
@@ -133,6 +144,8 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 console.print(create_table("Tasks", tasks))
             else:
                 console.print("[bold violet]No tasks found![/bold violet]")
+            if category != "Skip":
+                console.print(f"[yellow][bold]{len(task_manager.tasks) - len(tasks)}[/bold][bright_yellow] tasks skipped!")
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 3:
             try:
@@ -151,7 +164,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
         case 0:
             raise KeyboardInterrupt("Exiting...")
         
-def task_manager_menu(task_manager : TaskManager, option : int):
+def task_manager_menu(task_manager: TaskManager, option: int):
     console.clear()
     match option:
         case 1:
@@ -186,7 +199,7 @@ def task_manager_menu(task_manager : TaskManager, option : int):
             pass
     console.clear()
 
-def options_menu(user_email : str):
+def options_menu(user_email: str):
     time.sleep(0.1)
     console.clear()
     task_manager = TaskManager(user_email)

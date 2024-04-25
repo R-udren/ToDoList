@@ -38,9 +38,13 @@ python main.py --email myemail@email.com --add-task
 ## Installation
 
 1. Clone the repository
+
    ```bash
    git clone https://github.com/R-udren/ToDoList
+
+   cd ToDoList
    ```
+
 2. Install the dependencies
    ```bash
    python -m pip install -r requirements.txt
