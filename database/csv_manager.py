@@ -6,7 +6,7 @@ from config import CSV_NAME
 class CSVManager:
     @staticmethod
     def export_csv(data: list, header: str, csv_name: str = CSV_NAME) -> int:
-        path = os.path.join(os.getcwd(), csv_name)
+        path = os.path.join(os.getcwd() + '/csv/', csv_name)
         row_counter = 0
 
         with open(path, 'w') as file:
@@ -23,7 +23,7 @@ class CSVManager:
 
     @staticmethod
     def import_csv(header: str, csv_name: str = CSV_NAME):
-        path = os.path.join(os.getcwd(), csv_name)
+        path = os.path.join(os.getcwd() + '/csv/', csv_name)
 
         if not os.path.exists(path):
             raise Exception("File does not exist!")

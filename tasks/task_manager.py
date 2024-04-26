@@ -69,12 +69,11 @@ class TaskManager:
 
     def import_tasks(self, csv_name: str=CSV_NAME):
         header = "description,complete,due_date,priority,create_date"
-        data = CSVManager.import_csv(header, csv_name)
-        for row in data:
-            if not self.task_exists(Task(*row)):
-                self.tasks.append(Task(*row))
-                self.db.add_record('tasks', row)
-        return len(self.data)
+        imported_tasks = [Task(self.email, *row) for row in CSVManager.import_csv(header, csv_name) if not self.task_exists(Task(self.email, *row))]
+        self.tasks.extend(imported_tasks)
+        for __task in imported_tasks:
+            self.db.add_record('tasks', list(__task))
+        return len(imported_tasks)
 
     def task_exists(self, task: Task):
         for _task in self.tasks:
