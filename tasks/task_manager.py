@@ -114,17 +114,17 @@ class TaskManager:
                 value = Priority(value)
                 tasks = [task for task in tasks if task.priority == value]
             elif key == "due_date" or key == "create_date":
-                value = TaskManager.timestamp(value)
+                value = TaskManager.timestampvalue(value)
                 t1 = value + 86400 * 2
                 t2 = value - 86400 * 2
-                tasks = [task for task in tasks if t2 < task.due_date < t1]
+                tasks = [task for task in tasks if t2 < task.due_date.timestamp() < t1]
                 return tasks
                 
                 
         return tasks
     
     @staticmethod
-    def timestamp(optionandvalue : str):
+    def timestampvalue(optionandvalue : str):
         timeamount = optionandvalue.split(" ")
         match timeamount[0]:
             case "Days":

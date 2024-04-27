@@ -32,7 +32,7 @@ class Task:
         return f"Task({','.join(tuple(self))})"
 
     def __iter__(self):
-        return iter((self.creator_email, self.description, int(self.complete), self.due_date, int(self.priority), self.create_date))
+        return iter((self.creator_email, self.description, int(self.complete), self.due_date.timestamp(), int(self.priority), self.create_date.timestamp()))
 
     def csv(self):
         return ','.join(self.pretty_tuple())
