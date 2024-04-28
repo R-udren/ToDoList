@@ -108,20 +108,20 @@ class TaskManager:
         """
         # Filter tasks
         for key, value in filter_by.items():
-            if key == "complete":
-                tasks = [task for task in tasks if task.complete == value]
-            elif key == "priority":
+            if key == "Complete":
+                found_tasks = [task for task in tasks if task.complete == value]
+            elif key == "Priority":
                 value = Priority(value)
-                tasks = [task for task in tasks if task.priority == value]
-            elif key == "due_date" or key == "create_date":
+                found_tasks = [task for task in tasks if task.priority == value]
+            elif key == "Due date" or key == "Create date":
                 value = TaskManager.timestampvalue(value)
                 t1 = value + 86400 * 2
                 t2 = value - 86400 * 2
-                tasks = [task for task in tasks if t2 < task.due_date.timestamp() < t1]
-                return tasks
-                
-                
-        return tasks
+                found_tasks = [task for task in tasks if t2 < task.due_date.timestamp() < t1]
+            matching_tasks = [task for task in found_tasks if task in tasks]
+            tasks = matching_tasks
+                        
+        return matching_tasks
     
     @staticmethod
     def timestampvalue(optionandvalue : str):
