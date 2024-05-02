@@ -2,6 +2,7 @@ from datetime import datetime
 
 from config import TIME_FORMAT
 
+
 def convert_to_datetime(date, default=None):
     if date is None:
         return default or datetime.now()

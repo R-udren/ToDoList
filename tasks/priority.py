@@ -58,5 +58,3 @@ class Priority:
         if isinstance(other, Priority):
             return self.level >= other.level
         return False
-
-

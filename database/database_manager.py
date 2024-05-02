@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class DatabaseManager:
     def __init__(self, db_name: str):
         self.db_name = db_name
@@ -18,16 +19,15 @@ class DatabaseManager:
         self.cursor.execute(f'INSERT INTO {table_name} VALUES ({placeholders})', values)
         self.db.commit()
 
-
     def get_record(self, table_name: str, column_name: str, value: str):
         self.cursor.execute(f'SELECT * FROM {table_name} WHERE {column_name} = ?', (value,))
         return self.cursor.fetchall()
 
-    def read_records(self, table_name: str, email : str):
+    def read_records(self, table_name: str, email: str):
         self.cursor.execute(f'SELECT * FROM {table_name} WHERE email = ?', (email,))
         return self.cursor.fetchall()
 
-    def clear_table(self, table_name: str, email : str):
+    def clear_table(self, table_name: str, email: str):
         self.cursor.execute(f'DELETE FROM {table_name} WHERE email = ?', (email,))
         self.db.commit()
 
@@ -44,7 +44,7 @@ class DatabaseManager:
     def username_exists(self, username):
         self.cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
         return self.cursor.fetchone() is not None
-    
+
     def email_exists(self, email):
         self.cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         return self.cursor.fetchone() is not None

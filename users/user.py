@@ -1,8 +1,7 @@
-import re
-import hashlib
-import secrets
 import binascii
-
+import hashlib
+import re
+import secrets
 
 
 class User:
@@ -51,15 +50,15 @@ class User:
         if not User.is_password_correct(password):
             raise ValueError("Password is not valid")
         return password
-    
+
     @staticmethod
     def hash_password(password):
         """Hash a password for storing."""
         salt = secrets.token_hex(16)
         pwdhash = hashlib.pbkdf2_hmac('sha256', User.validate_password(password).encode('utf-8'),
-                                    salt.encode('ascii'), 100000)
+                                      salt.encode('ascii'), 100000)
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
-        return (salt + pwdhash)
+        return salt + pwdhash
 
     @staticmethod
     def verify_password(db_password, provided_password):

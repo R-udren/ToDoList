@@ -1,7 +1,7 @@
-import csv
 import os
 
 from config import CSV_NAME
+
 
 class CSVManager:
     @staticmethod
@@ -19,7 +19,6 @@ class CSVManager:
             raise FileExistsError("File does not created!")
 
         return row_counter
-
 
     @staticmethod
     def import_csv(header: str, csv_name: str = CSV_NAME):

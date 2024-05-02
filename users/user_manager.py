@@ -1,6 +1,7 @@
+from config import DB_NAME
 from database.database_manager import DatabaseManager
 from users.user import User
-from config import DB_NAME
+
 
 class UserManager:
     def __init__(self):
@@ -40,7 +41,7 @@ class UserManager:
         password = User.hash_password(User.validate_password(password))
         self.db.add_user('users', username, email, password)
         return email
-    
+
     def delete_user(self, email):
         """
         Delete a user from the database

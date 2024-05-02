@@ -1,20 +1,21 @@
-
-from rich.prompt import Prompt
 from rich.console import Console
+from rich.prompt import Prompt
 
-from users.user_manager import UserManager
-from users.user import User
-from ui.main_ui import create_table
 from config import PASSWORD_ATTEMPTS
+from ui.main_ui import create_table
+from users.user import User
+from users.user_manager import UserManager
 
 console = Console()
 user_manager = UserManager()
 
-def login_menu(user_email=None, password_attempts=PASSWORD_ATTEMPTS, cli=False):
+
+def login_menu(user_email=None, cli=False):
     if cli:
         return login_option(user_email)
     else:
         return login_ui()
+
 
 def login_ui():
     console.clear()
@@ -37,6 +38,7 @@ def login_ui():
     except Exception as e:
         console.print(f"[bold red]Error: {e}[/bold red]")
 
+
 def login_option(user_email: str = None):
     user_email = user_email or Prompt.ask("Email")
     for attempt in range(PASSWORD_ATTEMPTS):
@@ -44,7 +46,8 @@ def login_option(user_email: str = None):
         try:
             return user_manager.login(user_email, password)
         except ValueError as ve:
-            console.print(f"[bold red]{ve}, attempts remaining {PASSWORD_ATTEMPTS-attempt-1}[/bold red]")
+            console.print(f"[bold red]{ve}, attempts remaining {PASSWORD_ATTEMPTS - attempt - 1}[/bold red]")
+
 
 def create_account_option():
     username = Prompt.ask("Username")

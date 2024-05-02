@@ -1,16 +1,17 @@
+import unittest
 from datetime import datetime
 
-import unittest
-
+from config import TIME_FORMAT
 from tasks.priority import Priority
 from tasks.task import Task
 from users.user import User
-from config import TIME_FORMAT
+
 
 class TestTask(unittest.TestCase):
     def setUp(self):
         self.date = datetime.now()
-        self.just_task = Task("test@example.com", "Test task", True, self.date, Priority("High"), self.date.strftime(TIME_FORMAT))
+        self.just_task = Task("test@example.com", "Test task", True, self.date, Priority("High"),
+                              self.date.strftime(TIME_FORMAT))
         self.other_task = Task("not_email", "", False, self.date.timestamp(), Priority("Medium"), self.date)
 
     def test_init(self):
@@ -38,11 +39,11 @@ class TestTask(unittest.TestCase):
         self.just_task.mark_complete()
         self.assertTrue(self.just_task.complete)
 
-
     def test_times(self):
         self.assertEqual(self.just_task.create_date, datetime.strptime(self.date.strftime(TIME_FORMAT), TIME_FORMAT))
         self.assertEqual(self.just_task.due_date, datetime.fromtimestamp(self.date.timestamp()))
         self.assertEqual(self.just_task.due_date.strftime(TIME_FORMAT), self.date.strftime(TIME_FORMAT))
+
 
 class TestPriority(unittest.TestCase):
     def setUp(self):
@@ -81,6 +82,7 @@ class TestPriority(unittest.TestCase):
         self.assertEqual(self.medium, Priority("Medium"))
         self.assertEqual(self.high, Priority("High"))
 
+
 class TestUser(unittest.TestCase):
     def setUp(self):
         self.just_user = User("temp", "temp@temp.lv", "password")
@@ -99,7 +101,7 @@ class TestUser(unittest.TestCase):
             User.validate_email(self.other_user.email, None)
         with self.assertRaises(ValueError):
             User.validate_password(self.other_user.password)
-        
+
     def test_password(self):
         self.assertTrue(User.is_password_correct("password"))
         self.assertFalse(User.is_password_correct("pass"))
@@ -108,11 +110,11 @@ class TestUser(unittest.TestCase):
     def test_email(self):
         self.assertTrue(User.is_email_correct(self.just_user.email))
         self.assertFalse(User.is_email_correct("temp"))
-    
 
 
 def start_tests():
     unittest.main()
+
 
 if __name__ == '__main__':
     start_tests()

@@ -1,6 +1,7 @@
 # To Do List
 
-Console Task management app written on Python. Supports adding, removing, listing, marking tasks as done, exporting and importing tasks from a file.
+Console Task management app written on Python. Supports adding, removing, listing, marking tasks as done, exporting and
+importing tasks from a file.
 
 ## Features
 
