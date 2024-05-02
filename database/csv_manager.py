@@ -5,8 +5,16 @@ from config import CSV_NAME
 
 class CSVManager:
     @staticmethod
-    def export_csv(data: list, header: str, csv_name: str = CSV_NAME) -> int:
-        path = os.path.join(os.getcwd() + '/csv/', csv_name)
+    def check_path(path: str) -> bool:
+        return os.path.exists(path)
+
+    @staticmethod
+    def export_csv(data: list, header: str, csv_name: str = CSV_NAME, path: str = None) -> int:
+        if path is None:
+            path = os.getcwd()
+        if not os.path.exists(path):
+            raise FileNotFoundError("Path does not exist!")
+        path = os.path.join(path, csv_name)
         row_counter = 0
 
         with open(path, 'w') as file:
@@ -21,9 +29,7 @@ class CSVManager:
         return row_counter
 
     @staticmethod
-    def import_csv(header: str, csv_name: str = CSV_NAME):
-        path = os.path.join(os.getcwd() + '/csv/', csv_name)
-
+    def import_csv(header: str, path) -> list:
         if not os.path.exists(path):
             raise Exception("File does not exist!")
 

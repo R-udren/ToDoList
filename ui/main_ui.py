@@ -68,7 +68,10 @@ def menu(menu_state=True, email=None, add_task=False, update_task=False, delete_
             if option <= 4:
                 task_manager_menu(TaskManager(active_email), option)
             else:
-                tasks_menu(TaskManager(active_email), option - 3)
+                state = tasks_menu(TaskManager(active_email), option - 3)
+                if state:
+                    console.print(state)
+                    sleep(1)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
             sleep(2)
@@ -80,8 +83,7 @@ def menu(menu_state=True, email=None, add_task=False, update_task=False, delete_
         try:
             options_menu(active_email)
         except KeyboardInterrupt:
-            console.print("[bold yellow]Logging out...[/bold yellow]")
-            sleep(1)
+            console.print("\n[bold yellow]Logging out...[/bold yellow]")
             menu()
 
     else:

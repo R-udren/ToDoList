@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -47,21 +48,13 @@ def choose_date(date: datetime = None):
 def update_task(task: Task):
     description = Prompt.ask("Description", default=task.description)
     complete = Prompt.ask("Complete", choices=["True", "False"], default="True" if task.complete else "False") == "True"
-    due_date = choose_date(datetime.fromtimestamp(task.due_date))
+    due_date = choose_date(task.due_date)
     priority = Prompt.ask("Priority", choices=Priority.LEVELS.keys(), default=str(task.priority))
     return Task(task.creator_email, description, complete, due_date, priority, task.create_date)
 
 
 def fill_task(email: str):
-    while True:
-        try:
-            description = Prompt.ask("Description")
-            if not description:
-                raise ValueError("Description cannot be empty")
-            break
-        except ValueError as ve:
-            console.print(f"[bold red]{ve}[/bold red]")
-
+    description = Prompt.ask("Description")
     due_date = choose_date()
     priority_name = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="Low")
 
@@ -124,11 +117,13 @@ def sort_filter_options():
     return sort_by, filter_by
 
 
-def tasks_menu(task_manager: TaskManager, option: int):
+def tasks_menu(task_manager: TaskManager, option: int) -> str:
     match option:
         case 1:
             console.print(create_table("Actions", TaskManager.commandsM))
-            option = Prompt.ask("Select an option", choices=[str(i) for i in range(len(TaskManager.commandsM))])
+            option = Prompt.ask("Select an option",
+                                choices=[str(i) for i in range(len(TaskManager.commandsM))],
+                                default="0", show_default=False)
             task_manager_menu(task_manager, int(option))
         case 2:
             console.print("[bold yellow]Listing all tasks![/bold yellow]")
@@ -154,6 +149,7 @@ def tasks_menu(task_manager: TaskManager, option: int):
                 tasks = task_manager.tasks
 
             if tasks:
+                console.clear()
                 console.print(create_table("Tasks", tasks))
             else:
                 console.print("[bold violet]No tasks found![/bold violet]")
@@ -164,14 +160,17 @@ def tasks_menu(task_manager: TaskManager, option: int):
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 3:
             try:
-                task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+                counter = task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+                return f"[bold green]{counter} Tasks exported successfully![/bold green]"
             except Exception as e:
                 console.print(f"[bold red]{e}[/bold red]")
             except KeyboardInterrupt:
                 console.print("\n[bold yellow]Aborting...[/bold yellow]")
         case 4:
             try:
-                task_manager.import_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+                counter = task_manager.import_tasks(path=Prompt.ask("Enter CSV name",
+                                                                    default=os.path.join(os.getcwd(), CSV_NAME)))
+                return f"[bold green]{counter} tasks imported successfully![/bold green]"
             except Exception as e:
                 console.print(f"[bold red]{e}[/bold red]")
             except KeyboardInterrupt:
@@ -207,8 +206,8 @@ def task_manager_menu(task_manager: TaskManager, option: int):
             task_manager.delete_task(task_manager.tasks[choice])
         case 4:
             console.print("[bold yellow]Marking a task as complete![/bold yellow]")
-            tasks = task_manager.filter_tasks(task_manager.tasks, {"complete": False})
-            if task_manager.tasks == [] or tasks == []:
+            tasks = task_manager.filter_tasks(task_manager.tasks, {"Complete": False})
+            if not tasks:
                 raise Exception("No tasks to mark as complete!")
             console.print(create_table("Tasks", tasks))
             choice = int(Prompt.ask("Select an task to mark as complete [gray](To abort input nothing!)[/gray]",
@@ -228,9 +227,14 @@ def options_menu(user_email: str):
         console.clear()
         console.print(create_table("Commands", task_manager.commandsV))
         try:
-            option = int(Prompt.ask("Select an option", choices=[str(i) for i in range(len(TaskManager.commandsV))]))
+            option = int(Prompt.ask("Select an option",
+                                    choices=[str(i) for i in range(len(TaskManager.commandsV))],
+                                    default="0", show_default=False))
             console.clear()
-            tasks_menu(task_manager, option)
+            state = tasks_menu(task_manager, option)
+            if state:
+                console.print(state)
+                sleep(1)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
             sleep(1)
