@@ -69,12 +69,11 @@ class TaskManager:
 
     def import_tasks(self, csv_name: str=CSV_NAME):
         header = "description,complete,due_date,priority,create_date"
-        data = CSVManager.import_csv(header, csv_name)
-        for row in data:
-            if not self.task_exists(Task(*row)):
-                self.tasks.append(Task(*row))
-                self.db.add_record('tasks', row)
-        return len(self.data)
+        imported_tasks = [Task(self.email, *row) for row in CSVManager.import_csv(header, csv_name) if not self.task_exists(Task(self.email, *row))]
+        self.tasks.extend(imported_tasks)
+        for __task in imported_tasks:
+            self.db.add_record('tasks', list(__task))
+        return len(imported_tasks)
 
     def task_exists(self, task: Task):
         for _task in self.tasks:
@@ -109,23 +108,23 @@ class TaskManager:
         """
         # Filter tasks
         for key, value in filter_by.items():
-            if key == "complete":
-                tasks = [task for task in tasks if task.complete == value]
-            elif key == "priority":
+            if key == "Complete":
+                found_tasks = [task for task in tasks if task.complete == value]
+            elif key == "Priority":
                 value = Priority(value)
-                tasks = [task for task in tasks if task.priority == value]
-            elif key == "due_date" or key == "create_date":
-                value = TaskManager.timestamp(value)
+                found_tasks = [task for task in tasks if task.priority == value]
+            elif key == "Due date" or key == "Create date":
+                value = TaskManager.timestampvalue(value)
                 t1 = value + 86400 * 2
                 t2 = value - 86400 * 2
-                tasks = [task for task in tasks if t2 < task.due_date < t1]
-                return tasks
-                
-                
-        return tasks
+                found_tasks = [task for task in tasks if t2 < task.due_date.timestamp() < t1]
+            matching_tasks = [task for task in found_tasks if task in tasks]
+            tasks = matching_tasks
+                        
+        return matching_tasks
     
     @staticmethod
-    def timestamp(optionandvalue : str):
+    def timestampvalue(optionandvalue : str):
         timeamount = optionandvalue.split(" ")
         match timeamount[0]:
             case "Days":

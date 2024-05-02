@@ -72,30 +72,32 @@ def fill_task(email: str):
         console.print(f"[bold red]{ve}[/bold red]")
 
 def filter_tasks(task_manager: TaskManager) -> list[Task]:
-    category = Prompt.ask("Filter by", choices=["Complete", "Priority", "Due date", "Create date"], default="Complete")
-    match category:
-        case "Complete":
-            filter_by = {
-                "complete": Prompt.ask("Complete", choices=["True", "False"], default="False") == "True"
-            }
-        case "Priority":
-            filter_by = {
-                "priority": Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="High")
-            }
-        case "Due date":
-            date_options = ["Days", "Weeks", "Months", "Years"]
-            date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
-            time = int(Prompt.ask(f"{date_option} to add", default="0", show_default=False))
-            filter_by = {
-                "due_date": date_option + " " + str(time)
-            }
-        case "Create date":
-            date_options = ["Days", "Weeks", "Months", "Years"]
-            date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
-            time = int(Prompt.ask(f"{date_option} to add", default="0", show_default=False))
-            filter_by = {
-                "create_date": date_option + " " + str(time)
-            }
+    attributes = ["Complete", "Priority", "Due date", "Create date"]
+    filter_by = {}
+    while True:
+        console.clear()
+        unused_attributes = [attribute for attribute in attributes if attribute not in filter_by.keys()]
+        if unused_attributes == []:
+            console.print("[bold orange]No more filters to add![/bold orange]")
+            break
+        category = Prompt.ask("Filter by", choices=unused_attributes)
+        match category:
+            case "Complete":
+                filter_by["Complete"] = Prompt.ask("Complete", choices=["True", "False"], default="False") == "True"
+            case "Priority":
+                filter_by["Priority"] = Prompt.ask("Priority", choices=["Low", "Medium", "High"], default="High")
+            case "Due date":
+                date_options = ["Days", "Weeks", "Months", "Years"]
+                date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
+                time = int(Prompt.ask(f"{date_option} to add", default="0", show_default=False))
+                filter_by["Due date"] = date_option + " " + str(time)
+            case "Create date":
+                date_options = ["Days", "Weeks", "Months", "Years"]
+                date_option = Prompt.ask("Change date by", choices=date_options, default="Days", show_default=False)
+                time = int(Prompt.ask(f"{date_option} to add", default="0", show_default=False))
+                filter_by["Create date"] = date_option + " " + str(time)
+        if Prompt.ask("Add another filter?", choices=["Yes", "No"], default="No") == "No":
+            break
     return task_manager.search(task_manager.tasks, filter_by)
 
 def sort_tasks(task_manager: TaskManager):

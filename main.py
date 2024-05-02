@@ -18,9 +18,10 @@ def main():
 
     args = parser.parse_args()
     arguments = [args.menu, args.email, args.list_tasks, args.add_task, args.update_task, args.delete_task, args.export_tasks, args.import_tasks]
-    if any(arguments[2:]):
-        arguments[0] = False
-    menu(*arguments)
+    if any(arguments):
+        args.menu = False
+    while True:
+        menu(*arguments)
 
 
 if __name__ == "__main__":
