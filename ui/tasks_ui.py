@@ -207,7 +207,7 @@ def task_manager_menu(task_manager: TaskManager, option: int):
             task_manager.delete_task(task_manager.tasks[choice])
         case 4:
             console.print("[bold yellow]Marking a task as complete![/bold yellow]")
-            tasks = task_manager.filter_tasks(task_manager.tasks, {"complete": False})
+            tasks = task_manager.filter_tasks(task_manager.tasks, {"Complete": False})
             if task_manager.tasks == [] or tasks == []:
                 raise Exception("No tasks to mark as complete!")
             console.print(create_table("Tasks", tasks))
