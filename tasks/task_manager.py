@@ -68,14 +68,16 @@ class TaskManager:
         written_rows = CSVManager.export_csv(data, header, csv_name)
         return written_rows
 
-    def import_tasks(self, csv_name: str = CSV_NAME):
+    def import_tasks(self, path: str = CSV_NAME):
         header = f"{DELIMITER}".join(["description", "complete", "due_date", "priority", "create_date"])
-        data = CSVManager.import_csv(header, csv_name)
+        data = CSVManager.import_csv(header, path)
+        counter = 0
         for row in data:
             if not self.task_exists(Task(*row)):
                 self.tasks.append(Task(*row))
                 self.db.add_record('tasks', row)
-        return len(data)
+                counter += 1
+        return counter
 
     def task_exists(self, task: Task):
         for _task in self.tasks:
@@ -105,14 +107,15 @@ class TaskManager:
         :param tasks: list of tasks to compare
         :param filter_by: dictionary of attributes to filter by (complete, priority, due_date, create_date)
         """
-        matching_tasks = []
-        for key, value in filter_by.items():
-            if key == "Complete":
+        matching_tasks = found_tasks = []
+        for option, value in filter_by.items():
+            option = option.capitalize()
+            if option == "Complete":
                 found_tasks = [task for task in tasks if task.complete == value]
-            elif key == "Priority":
+            elif option == "Priority":
                 value = Priority(value)
                 found_tasks = [task for task in tasks if task.priority == value]
-            elif key == "Due date" or key == "Create date":
+            elif option == "Due date" or option == "Create date":
                 value = TaskManager.time_stamp_value(value)
                 t1 = value - 86400 * 2
                 t2 = value + 86400 * 2
