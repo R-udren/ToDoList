@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 
 from config import TIME_FORMAT, DELIMITER
-from tasks.helper import convert_to_datetime
+from tasks.helper import convert_to_datetime, convert_to_bool
 from tasks.priority import Priority
 
 
@@ -12,7 +12,7 @@ class Task:
                  priority: Union[Priority, int, str] = Priority("Low"), create_date: datetime = datetime.now()):
         self.creator_email = email
         self.description = description
-        self.complete = bool(complete)
+        self.complete = convert_to_bool(complete)
         self.due_date = convert_to_datetime(due_date)
         self.priority = priority if isinstance(priority, Priority) else Priority(priority)
         self.create_date = convert_to_datetime(create_date)
@@ -36,9 +36,10 @@ class Task:
 
     def csv(self):
         values = self.pretty_tuple()
-        if values[0].find(DELIMITER) != -1:
-            values[0] = f'"{values[0]}"'
-        return f"{DELIMITER}".join()
+        return f"{DELIMITER}".join(values)
 
     def __eq__(self, other):
-        return self.description == other.description or self.create_date == other.create_date
+        return self.description == other.description \
+            and self.creator_email == other.creator_email \
+            and self.complete == other.complete \
+            and self.priority == other.priority
