@@ -160,7 +160,8 @@ def tasks_menu(task_manager: TaskManager, option: int) -> str:
             Prompt.ask("[cyan]Press [bold]Enter[/bold] to continue[cyan]")
         case 3:
             try:
-                counter = task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name", default=CSV_NAME))
+                counter = task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name",
+                                                                        default=os.path.join(os.getcwd(), CSV_NAME)))
                 return f"[bold green]{counter} Tasks exported successfully![/bold green]"
             except Exception as e:
                 console.print(f"[bold red]{e}[/bold red]")
