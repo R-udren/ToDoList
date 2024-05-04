@@ -1,12 +1,12 @@
-from typing import Union
 from time import sleep
+from typing import Union
 
 from rich.console import Console
 from rich.table import Table
 
+from tasks.task import Task
 from tasks.task_manager import TaskManager
 from users.user import User
-from tasks.task import Task
 
 console = Console()
 

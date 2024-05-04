@@ -15,6 +15,7 @@ def convert_to_datetime(date, default=None):
     else:
         raise ValueError("Invalid date")
 
+
 def convert_to_bool(value):
     if isinstance(value, bool):
         return value

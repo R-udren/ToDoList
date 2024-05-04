@@ -2,6 +2,7 @@ import argparse
 
 from ui.main_ui import menu
 
+
 def main():
     parser = argparse.ArgumentParser(description="To Do List CLI")
 
@@ -18,7 +19,8 @@ def main():
     parser.add_argument("--import-tasks", action="store_true", help="Import tasks from a CSV file")
 
     args = parser.parse_args()
-    arguments = [args.menu, args.email, args.add_task, args.update_task, args.delete_task, args.mark_complete, args.list_tasks, args.export_tasks, args.import_tasks]
+    arguments = [args.menu, args.email, args.add_task, args.update_task, args.delete_task, args.mark_complete,
+                 args.list_tasks, args.export_tasks, args.import_tasks]
     cli = False
     if any(arguments[1:]):
         arguments[0] = False

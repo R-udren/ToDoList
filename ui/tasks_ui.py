@@ -170,7 +170,7 @@ def tasks_menu(task_manager: TaskManager, option: int) -> str:
                 counter = task_manager.import_tasks(path=Prompt.ask("Enter CSV name",
                                                                     default=os.path.join(os.getcwd(), CSV_NAME)))
                 return f"[bold green]{counter} tasks imported successfully![/bold green]" \
-                            if counter else "[bold yellow]No tasks imported![/bold yellow]"
+                    if counter else "[bold yellow]No tasks imported![/bold yellow]"
             except KeyboardInterrupt:
                 console.print("\n[bold yellow]Aborting...[/bold yellow]")
         case 0:
