@@ -163,17 +163,14 @@ def tasks_menu(task_manager: TaskManager, option: int) -> str:
                 counter = task_manager.export_tasks(csv_name=Prompt.ask("Enter CSV name",
                                                                         default=os.path.join(os.getcwd(), CSV_NAME)))
                 return f"[bold green]{counter} Tasks exported successfully![/bold green]"
-            except Exception as e:
-                console.print(f"[bold red]{e}[/bold red]")
             except KeyboardInterrupt:
                 console.print("\n[bold yellow]Aborting...[/bold yellow]")
         case 4:
             try:
                 counter = task_manager.import_tasks(path=Prompt.ask("Enter CSV name",
                                                                     default=os.path.join(os.getcwd(), CSV_NAME)))
-                return f"[bold green]{counter} tasks imported successfully![/bold green]"
-            except Exception as e:
-                console.print(f"[bold red]{e}[/bold red]")
+                return f"[bold green]{counter} tasks imported successfully![/bold green]" \
+                            if counter else "[bold yellow]No tasks imported![/bold yellow]"
             except KeyboardInterrupt:
                 console.print("\n[bold yellow]Aborting...[/bold yellow]")
         case 0:
@@ -238,4 +235,5 @@ def options_menu(user_email: str):
                 sleep(1)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
-            sleep(1)
+            console.print_exception()
+            console.input("[gray]Press Enter to continue...")

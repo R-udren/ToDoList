@@ -73,9 +73,10 @@ class TaskManager:
         data = CSVManager.import_csv(header, path)
         counter = 0
         for row in data:
-            if not self.task_exists(Task(*row)):
-                self.tasks.append(Task(*row))
-                self.db.add_record('tasks', row)
+            task = Task(self.email, *row)
+            if task not in self.tasks:
+                self.tasks.append(task)
+                self.db.add_record('tasks', list(task))
                 counter += 1
         return counter
 
