@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Union
 
-from config import TIME_FORMAT
+from config import TIME_FORMAT, DELIMITER
 from tasks.helper import convert_to_datetime
 from tasks.priority import Priority
 
@@ -35,7 +35,10 @@ class Task:
                      int(self.priority), self.create_date.timestamp()))
 
     def csv(self):
-        return ','.join(self.pretty_tuple())
+        values = self.pretty_tuple()
+        if values[0].find(DELIMITER) != -1:
+            values[0] = f'"{values[0]}"'
+        return f"{DELIMITER}".join()
 
     def __eq__(self, other):
         return self.description == other.description or self.create_date == other.create_date

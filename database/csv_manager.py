@@ -1,12 +1,12 @@
 import os
 
-from config import CSV_NAME
+from config import CSV_NAME, DELIMITER
 
 
 class CSVManager:
     @staticmethod
     def export_csv(data: list, header: str, csv_name: str = CSV_NAME) -> int:
-        path = os.path.join(os.getcwd() + '/csv/', csv_name)
+        path = os.path.join(os.getcwd(), csv_name)
         row_counter = 0
 
         with open(path, 'w') as file:
@@ -22,7 +22,7 @@ class CSVManager:
 
     @staticmethod
     def import_csv(header: str, csv_name: str = CSV_NAME):
-        path = os.path.join(os.getcwd() + '/csv/', csv_name)
+        path = os.path.join(os.getcwd(), csv_name)
 
         if not os.path.exists(path):
             raise Exception("File does not exist!")
@@ -31,4 +31,4 @@ class CSVManager:
             for line in file:
                 if line.startswith(header) and line.endswith('\n'):
                     continue
-                yield line.strip().split(',')  # Return a generator
+                yield line.strip().split(DELIMITER)  # Return a generator
