@@ -112,9 +112,5 @@ class TestUser(unittest.TestCase):
         self.assertFalse(User.is_email_correct("temp"))
 
 
-def start_tests():
-    unittest.main()
-
-
 if __name__ == '__main__':
-    start_tests()
+    unittest.main()
