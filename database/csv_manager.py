@@ -1,6 +1,6 @@
 import os
 
-from config import CSV_NAME, DELIMITER
+from config import CSV_NAME, CSV_DELIMITER
 
 
 class CSVManager:
@@ -37,4 +37,4 @@ class CSVManager:
             for line in file:
                 if line.startswith(header) and line.endswith('\n'):
                     continue
-                yield line.strip().split(DELIMITER)  # Return a generator
+                yield line.strip().split(CSV_DELIMITER)  # Return a generator

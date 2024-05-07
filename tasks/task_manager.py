@@ -1,7 +1,7 @@
 from datetime import datetime
 from operator import attrgetter
 
-from config import DB_NAME, CSV_NAME, DELIMITER
+from config import DB_NAME, CSV_NAME, CSV_DELIMITER
 from database.csv_manager import CSVManager
 from database.database_manager import DatabaseManager
 from tasks.priority import Priority
@@ -63,13 +63,13 @@ class TaskManager:
             self.db.add_record('tasks', list(task))
 
     def export_tasks(self, csv_name: str = CSV_NAME):
-        header = f"{DELIMITER}".join(["description", "complete", "due_date", "priority", "create_date"])
+        header = f"{CSV_DELIMITER}".join(["description", "complete", "due_date", "priority", "create_date"])
         data = [task.csv() for task in self.tasks]
         written_rows = CSVManager.export_csv(data, header, csv_name)
         return written_rows
 
     def import_tasks(self, path: str = CSV_NAME):
-        header = f"{DELIMITER}".join(["description", "complete", "due_date", "priority", "create_date"])
+        header = f"{CSV_DELIMITER}".join(["description", "complete", "due_date", "priority", "create_date"])
         data = CSVManager.import_csv(header, path)
         counter = 0
         for row in data:

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Union
 
-from config import TIME_FORMAT, DELIMITER
+from config import TIME_FORMAT, CSV_DELIMITER
 from tasks.helper import convert_to_datetime, convert_to_bool
 from tasks.priority import Priority
 
@@ -36,7 +36,7 @@ class Task:
 
     def csv(self):
         values = self.pretty_tuple()
-        return f"{DELIMITER}".join(values)
+        return f"{CSV_DELIMITER}".join(values)
 
     def __eq__(self, other):
         return self.description == other.description \
