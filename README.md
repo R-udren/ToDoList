@@ -18,7 +18,6 @@ importing tasks from a file.
 - Required packages are listed in `requirements.txt`
 - OS that supports Python
 
-
 ## Usage
 
 Uses a CLI to interact with the app. The app can be run in two ways: classic usage and CLI.
@@ -49,7 +48,9 @@ python main.py --email example@mail.com --add-task
 
    ```bash
    git clone https://github.com/R-udren/ToDoList
+   ```
 
+   ```bash
    cd ToDoList
    ```
 

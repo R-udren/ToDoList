@@ -12,8 +12,8 @@ console = Console()
 
 
 def create_table(name: str, commands: list[Union[str, Task, User]], start_from: int = 1) -> Table:
-    table = Table(title=name, title_style="bold blue", show_lines=True)
-    table.add_column("Nr", style="cyan", justify="center")
+    table = Table(title=name, title_style="bold bright_blue", show_lines=True)
+    table.add_column("Nr", style="bright_cyan", justify="center")
     if isinstance(commands[0], Task):  # Create Task table
         table.add_column("Description", style="magenta", overflow="fold")
         table.add_column("Complete", style="green")
@@ -42,7 +42,7 @@ def create_table(name: str, commands: list[Union[str, Task, User]], start_from: 
             table.add_row(str(i), option.email, option.username)
         return table
     else:  # Create actions table
-        table.add_column("Description", style="magenta")
+        table.add_column("Description", style="bright_magenta")
 
         for i, option in enumerate(commands, start_from - 1):
             table.add_row(str(i), option)

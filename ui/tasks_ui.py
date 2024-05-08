@@ -227,7 +227,7 @@ def options_menu(user_email: str):
         try:
             option = int(Prompt.ask("Select an option",
                                     choices=[str(i) for i in range(len(TaskManager.commandsV))],
-                                    default="0", show_default=False))
+                                    default="Skip", show_default=True))
             console.clear()
             state = tasks_menu(task_manager, option)
             if state:
