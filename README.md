@@ -20,7 +20,9 @@ importing tasks from a file.
 
 ## Usage
 
-Uses a CLI to interact with the app. The app can be run in two ways: classic usage and CLI.
+Uses a CLI to interact with the app.
+Ctrl + C several times to exit the app.
+The app can be run in two ways: classic usage and CLI.
 
 ### Classic usage
 

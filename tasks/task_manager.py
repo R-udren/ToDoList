@@ -10,7 +10,7 @@ from tasks.task import Task
 
 class TaskManager:
     commandsV = [
-        "Exit",
+        "Exit to login menu",
         "Manage tasks",
         "List all tasks",
         "Export to CSV",
@@ -18,7 +18,7 @@ class TaskManager:
     ]
 
     commandsM = [
-        "Exit",
+        "Go back",
         "Create a task",
         "Update a task",
         "Delete a task",
