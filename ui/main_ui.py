@@ -25,8 +25,13 @@ def create_table(name: str, commands: list[Union[str, Task, User]], start_from: 
             task_params = list(option.pretty_tuple())
             task_params[1] = f"[green]{task_params[1]}[/green]" if task_params[
                                                                        1] == "True" else f"[red]{task_params[1]}[/red]"
-            task_params[3] = f"[red bold]{task_params[3]}[/red bold]" if task_params[
-                                                                             3] == "High" else f"[cyan]{task_params[3]}[/cyan]"
+            if task_params[3] == "High":
+                task_params[3] = f"[red]{task_params[3]}[/red]"
+            elif task_params[3] == "Medium":
+                task_params[3] = f"[yellow]{task_params[3]}[/yellow]"
+            else:
+                task_params[3] = f"[cyan]{task_params[3]}[/cyan]"
+            task_params[3] = f"[bold]{task_params[3]}[/bold]"
             table.add_row(str(i), *task_params)
         return table
 
