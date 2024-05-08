@@ -12,6 +12,13 @@ importing tasks from a file.
 - Export tasks to a file
 - Import tasks from a file
 
+## Requirements
+
+- Python 3.6 or higher
+- Required packages are listed in `requirements.txt`
+- OS that supports Python
+
+
 ## Usage
 
 Uses a CLI to interact with the app. The app can be run in two ways: classic usage and CLI.
@@ -33,7 +40,7 @@ main.py --help
 Example of adding a task
 
 ```bash
-python main.py --email myemail@email.com --add-task
+python main.py --email example@mail.com --add-task
 ```
 
 ## Installation
