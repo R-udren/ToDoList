@@ -12,7 +12,7 @@ class User:
 
     @staticmethod
     def validate_username(username, db):
-        if not username:
+        if not username or username.isspace():
             raise ValueError("Username cannot be empty")
         if db.username_exists(username):
             raise ValueError("Username already exists")
