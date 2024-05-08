@@ -23,8 +23,7 @@ def create_table(name: str, commands: list[Union[str, Task, User]], start_from: 
 
         for i, option in enumerate(commands, start_from):
             task_params = list(option.pretty_tuple())
-            task_params[1] = f"[green]{task_params[1]}[/green]" if task_params[
-                                                                       1] == "True" else f"[red]{task_params[1]}[/red]"
+            task_params[1] = f"[green]{task_params[1]}[/green]" if task_params[1] == "True" else f"[red]{task_params[1]}[/red]"
             if task_params[3] == "High":
                 task_params[3] = f"[red]{task_params[3]}[/red]"
             elif task_params[3] == "Medium":

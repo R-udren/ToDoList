@@ -85,22 +85,22 @@ class TestPriority(unittest.TestCase):
 
 class TestUser(unittest.TestCase):
     def setUp(self):
-        self.just_user = User("temp", "temp@temp.lv", "password")
-        self.other_user = User("", "temptemp.lv", "temp")
+        self.temp_user = User("temp", "temp@temp.lv", "password")
+        self.wrong_name_email_password = User("", "temptemp.lv", "temp")
         self.hashed_password = User.hash_password("password")
 
     def test_init(self):
-        self.assertEqual(self.just_user.username, "temp")
-        self.assertEqual(self.just_user.email, "temp@temp.lv")
-        self.assertEqual(self.just_user.password, "password")
+        self.assertEqual(self.temp_user.username, "temp")
+        self.assertEqual(self.temp_user.email, "temp@temp.lv")
+        self.assertEqual(self.temp_user.password, "password")
 
     def test_invalid_attributes(self):
         with self.assertRaises(ValueError):
-            User.validate_username(self.other_user.username, None)
+            User.validate_username(self.wrong_name_email_password.username, None)
         with self.assertRaises(ValueError):
-            User.validate_email(self.other_user.email, None)
+            User.validate_email(self.wrong_name_email_password.email, None)
         with self.assertRaises(ValueError):
-            User.validate_password(self.other_user.password)
+            User.validate_password(self.wrong_name_email_password.password)
 
     def test_password(self):
         self.assertTrue(User.is_password_correct("password"))
@@ -108,7 +108,7 @@ class TestUser(unittest.TestCase):
         self.assertTrue(User.verify_password(self.hashed_password, "password"))
 
     def test_email(self):
-        self.assertTrue(User.is_email_correct(self.just_user.email))
+        self.assertTrue(User.is_email_correct(self.temp_user.email))
         self.assertFalse(User.is_email_correct("temp"))
 
 
