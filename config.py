@@ -4,4 +4,6 @@ CSV_NAME = "tasks.csv"
 
 CSV_DELIMITER = ";"
 
+DEBUG = False
+
 PASSWORD_ATTEMPTS = 3

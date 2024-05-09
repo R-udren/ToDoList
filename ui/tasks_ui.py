@@ -5,7 +5,7 @@ from time import sleep
 from rich.console import Console
 from rich.prompt import Prompt
 
-from config import TIME_FORMAT, CSV_NAME
+from config import TIME_FORMAT, CSV_NAME, DEBUG
 from tasks.priority import Priority
 from tasks.task import Task
 from tasks.task_manager import TaskManager
@@ -235,5 +235,6 @@ def options_menu(user_email: str):
                 sleep(1)
         except Exception as e:
             console.print(f"[bold red]{e}[/bold red]")
-            console.print_exception()
+            if DEBUG:
+                console.print_exception(show_locals=True, extra_lines=5)
             console.input("[gray]Press Enter to continue...")
