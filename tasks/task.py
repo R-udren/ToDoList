@@ -8,8 +8,8 @@ from tasks.priority import Priority
 
 class Task:
     def __init__(self, email: str, description: str, complete: bool = False,
-                 due_date: datetime = datetime.now(),
-                 priority: Union[Priority, int, str] = Priority("Low"), create_date: datetime = datetime.now()):
+                 due_date: datetime = None,
+                 priority: Union[Priority, int, str] = Priority("Low"), create_date: datetime = None):
         self.creator_email = email
         self.description = description
         self.complete = convert_to_bool(complete)
