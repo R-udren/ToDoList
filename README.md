@@ -58,7 +58,7 @@ python main.py
 List all possible commands
 
 ```bash
-main.py --help
+python main.py --help
 ```
 
 Example of adding a task
